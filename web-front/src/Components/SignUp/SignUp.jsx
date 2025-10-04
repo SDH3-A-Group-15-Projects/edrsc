@@ -30,15 +30,15 @@ return (
       <div className="inputs">
         <div className="input">
           <img src={person_icon} height={25} width={25} alt="" />
-          <input type="text" placeholder='Name' />
+          <input type="text" placeholder='First Name' />
+        </div>
+        <div className="input">
+          <img src={person_icon} height={25} width={25} alt="" />
+          <input type="text" placeholder='Last Name' />
         </div>
         <div className="input">
           <img src={email_icon} height={25} width={25} alt="" />
           <input type="email" placeholder='Email' />
-        </div>
-        <div className="input">
-          <img src={person_icon} height={25} width={25} alt="" />
-          <input type="text" placeholder='UserName' />
         </div>
         <div className="input">
           <img src={password_icon} height={25} width={25} alt="" />
