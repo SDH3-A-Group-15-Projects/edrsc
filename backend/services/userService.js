@@ -1,4 +1,4 @@
-import ErrorConsts from "../consts/errorConsts";
+import { NameValidationError, EmailValidationError } from "../utils/errors";
 
 class UserService {
     static validateUserProfileInputs(firstName, lastName, email) {
@@ -6,11 +6,11 @@ class UserService {
         const emailRegex = /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/g // Source: https://regex101.com/r/lHs2R3/1
 
         if (!firstName || firstName.trim() === '' || !nameRegex.test(firstName)) {
-            throw new Error(ErrorConsts.firstNameValidationError.message);
+            throw new NameValidationError();
         } else if (!lastName || lastName.trim() === '' || !nameRegex.test(lastName)) {
-            throw new Error(ErrorConsts.lastNameValidationError.message);
+            throw new NameValidationError();
         } else if (!email || email.trim() === '' || !emailRegex.test(email)) {
-            throw new Error(ErrorConsts.emailValidationError.message);
+            throw new EmailValidationError();
         }
     }
 
