@@ -19,13 +19,8 @@ class UserModel {
 
   static async updateUserProfile(dbRef, uid, profileDataUpdate) {
     const userProfileRef = db.ref(`${dbRef}/${uid}`);
-    try {
-      await userProfileRef.update(profileDataUpdate)
-      return await userProfileRef.once('value').val();
-    } catch (e) {
-      console.error(e);
-      return null;
-    }
+    await userProfileRef.update(profileDataUpdate)
+    return await userProfileRef.once('value').val();
   }
 
   static async deleteUserProfile(dbRef, uid) {

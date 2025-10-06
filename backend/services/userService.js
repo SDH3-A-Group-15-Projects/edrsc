@@ -21,11 +21,14 @@ class UserService {
             throw e;
         }
 
+        const date = new Date().toISOString();
+
         const profileData = {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        createdAt: new Date().toISOString()
+        createdAt: date,
+        updatedAt: date
         };
 
         return await Model.createUserProfile(uid, profileData);
@@ -35,12 +38,19 @@ class UserService {
         return await Model.getUserProfile(uid);
     }
 
-    static async updateUserProfile(Model, uid, profileDataUpdate) {
+    static async updateUserProfile(Model, uid, firstName, lastName, email) {
         try {
             this.validateUserProfileInputs(firstName, lastName, email);
         } catch (e) {
             throw e;
         }
+
+        const profileDataUpdate = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        updatedAt: new Date().toISOString()
+        };
 
         return await Model.updateUserProfile(uid, profileDataUpdate);
     }

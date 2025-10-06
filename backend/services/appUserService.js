@@ -6,15 +6,15 @@ class AppUserService extends UserService {
         return await super.createUserProfile(AppUserModel, uid, firstName, lastName, email);
     }
 
-    static async getUserProfile(Model, uid) {
+    static async getUserProfile(uid) {
         return await super.getUserProfile(AppUserModel, uid);
     }
 
-    static async updateUserProfile(Model, uid, profileDataUpdate) {
-        return await super.updateUserProfile(AppUserModel, uid, profileDataUpdate);
+    static async updateUserProfile(uid, firstName, lastName, email) {
+        return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email);
     }
 
-    static async deleteUserProfile(Model, uid) {
+    static async deleteUserProfile(uid) {
         return await super.deleteUserProfile(AppUserModel, uid);
     }
 }
