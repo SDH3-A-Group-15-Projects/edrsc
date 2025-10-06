@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/web', webUserRoutes);
-app.use('/api/app', appUserRoutes);
+app.use('/api/web/users', webUserRoutes);
+app.use('/api/app/users', appUserRoutes);
 
 app.listen(port, () => console.log('Express app listening on ${port}\\'))
