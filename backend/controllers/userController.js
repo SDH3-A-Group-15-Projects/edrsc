@@ -16,7 +16,7 @@ class UserController {
 
     static async getUserProfile(Service, req, res) {
         try {
-            const userProfile = await Service.getUserProfile(uid);
+            const userProfile = await Service.getUserProfile(req.user.uid);
             if (userProfile) res.status(200).json(userProfile);
             else res.status(404).send("User Profile not found.");
         } catch (e) {
@@ -43,7 +43,7 @@ class UserController {
 
     static async deleteUserProfile(Service, req, res) {
         try {
-            if (await Service.deleteUserProfile(uid)) res.status(204).send("User profile successfully deleted.")
+            if (await Service.deleteUserProfile(req.user.uid)) res.status(204).send("User profile successfully deleted.")
             else res.status(404).send("User Profile not found.");
         } catch (e) {
             console.error(e.message);
