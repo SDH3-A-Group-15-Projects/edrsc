@@ -1,4 +1,4 @@
-import UserModel from './userModel';
+import UserModel from './userModel.js';
 
 class WebUserModel extends UserModel {
   static _dbRef = "web/users";

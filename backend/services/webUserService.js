@@ -1,5 +1,5 @@
-import UserService from "./userService";
-import WebUserModel from "../models/webUserModel";
+import UserService from "./userService.js";
+import WebUserModel from "../models/webUserModel.js";
 
 class WebUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email) {

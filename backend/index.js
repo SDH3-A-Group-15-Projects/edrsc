@@ -1,11 +1,22 @@
-const { initializeApp, applicationDefault } = require('firebase-admin/app');
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
 const express = require('express');
-const dotenv = require('dotenv');
+import Env from './env.config.js';
 const cors = require('cors');
-const webUserRoutes = require('./routes/web/userRoutes');
-const appUserRoutes = require('./routes/app/userRoutes');
+import * as webUserRoutes from './routes/web/userRoutes.js';
+import * as appUserRoutes from './routes/app/userRoutes.js';
 
-dotenv.config();
+const env = new Env();
+
+const isDevelopment = () => {
+  return process.env.NODE_ENV === "development";
+}
+
+if (isDevelopment()) {
+  await import('firebase/auth');
+
+  const auth = getAuth();
+  connectAuthEmulator(auth, process.env.AUTH_URL);
+}
 
 initializeApp({
   credential: applicationDefault(),

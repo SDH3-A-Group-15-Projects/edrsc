@@ -1,5 +1,5 @@
-import UserService from "./userService";
-import AppUserModel from "../models/appUserModel";
+import UserService from "./userService.js";
+import AppUserModel from "../models/appUserModel.js";
 
 class AppUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email) {

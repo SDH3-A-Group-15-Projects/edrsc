@@ -1,4 +1,4 @@
-import { NameValidationError, EmailValidationError } from "../utils/errors";
+import { NameValidationError, EmailValidationError } from "../utils/errors.js";
 
 class UserService {
     static validateUserProfileInputs(firstName, lastName, email) {

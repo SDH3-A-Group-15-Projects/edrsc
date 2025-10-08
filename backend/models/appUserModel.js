@@ -1,4 +1,4 @@
-import UserModel from './userModel';
+import UserModel from './userModel.js';
 
 class AppUserModel extends UserModel {
   static _dbRef = "app/users";
