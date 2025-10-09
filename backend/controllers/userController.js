@@ -9,7 +9,7 @@ class UserController {
             res.status(201).json(newUserProfile);
         } catch (e) {
             console.error(e.message);
-            if (res.status) return res.status(e.status).send(e.message);
+            if (res.status) return res.status(500).send(e.message);
             else return res.status(500).send(e.message);
         }
     }
@@ -21,7 +21,7 @@ class UserController {
             else res.status(404).send("User Profile not found.");
         } catch (e) {
             console.error(e.message);
-            if (res.status) return res.status(e.status).send(e.message);
+            if (res.status) return res.status(500).send(e.message);
             else return res.status(500).send(e.message);
         }
     }
@@ -36,7 +36,7 @@ class UserController {
             res.status(200).json(profileDataUpdate);
         } catch (e) {
             console.error(e.message);
-            if (res.status) return res.status(e.status).send(e.message);
+            if (res.status) return res.status(500).send(e.message);
             else return res.status(500).send(e.message);
         }
     }
@@ -47,7 +47,7 @@ class UserController {
             else res.status(404).send("User Profile not found.");
         } catch (e) {
             console.error(e.message);
-            if (res.status) return res.status(e.status).send(e.message);
+            if (res.status) return res.status(500).send(e.message);
             else return res.status(500).send(e.message);
         }
     }

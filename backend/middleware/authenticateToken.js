@@ -1,6 +1,8 @@
 import { getAuth } from 'firebase-admin/auth';
+import FirebaseConfig from '../utils/firebaseConfig.js';
 
 async function authenticateToken(req, res, next) {
+  const fb = await FirebaseConfig.getFirebaseApp();
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -10,7 +12,7 @@ async function authenticateToken(req, res, next) {
   const idToken = authHeader.split('Bearer ')[1];
 
   try {
-    const decodedToken = await getAuth().verifyIdToken(idToken);
+    const decodedToken = await fb.getAuth().verifyIdToken(idToken);
     req.user = decodedToken;
     console.log(`User ${req.user.uid} authenticated.`);
     next();

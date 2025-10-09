@@ -8,10 +8,10 @@ class Env {
 
     constructor() {
         dotenv.config({
-            path: path.resolve(process.cwd(), this.dotEnvDefault),
+            path: path.resolve(process.cwd(), ".env"),
         });
 
-        const envFile = (process.env.NODE_ENV === "production") ? this.dotEnvProduction : this.dotEnvDevelopment;
+        const envFile = (process.env.NODE_ENV === "production") ? ".env.production" : ".env.development";
 
         dotenv.config({
             path: path.resolve(process.cwd(), envFile)
