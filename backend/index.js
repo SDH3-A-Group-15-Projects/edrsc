@@ -1,16 +1,23 @@
-const { initializeApp, applicationDefault } = require('firebase-admin/app');
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const webUserRoutes = require('./routes/web/userRoutes');
-const appUserRoutes = require('./routes/app/userRoutes');
+import express from 'express';
+import Env from './env.config.js';
+import cors from 'cors';
+import webUserRoutes from './routes/web/userRoutes.js';
+import appUserRoutes from './routes/app/userRoutes.js';
+import FirebaseConfig from './utils/firebaseConfig.js';
 
-dotenv.config();
+const env = new Env();
 
-initializeApp({
-  credential: applicationDefault(),
-  databaseURL: process.env.DATABASE_URL
-});
+const fb = FirebaseConfig.getFirebaseApp();
+
+const isDevelopment = () => {
+  return process.env.NODE_ENV === "development";
+}
+
+if (isDevelopment()) {
+  await import('firebase/auth');
+  const auth = fb.getAuth();
+  connectAuthEmulator(auth, process.env.AUTH_URL);
+}
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,4 +28,4 @@ app.use(express.json());
 app.use('/api/web/users', webUserRoutes);
 app.use('/api/app/users', appUserRoutes);
 
-app.listen(port, () => console.log('Express app listening on ${port}\\'));
+app.listen(port, () => console.log(`Express app listening on ${port}`));

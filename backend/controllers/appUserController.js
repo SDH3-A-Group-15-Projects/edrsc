@@ -1,5 +1,5 @@
-import UserController from "./userController";
-import AppUserService from "../services/appUserService";
+import UserController from "./userController.js";
+import AppUserService from "../services/appUserService.js";
 
 class AppUserController extends UserController {
     static async createUserProfile(req, res) {
