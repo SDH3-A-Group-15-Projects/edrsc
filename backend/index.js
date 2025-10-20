@@ -14,18 +14,28 @@ const isDevelopment = () => {
 }
 
 if (isDevelopment()) {
-  await import('firebase/auth');
-  const auth = fb.getAuth();
-  connectAuthEmulator(auth, process.env.AUTH_URL);
+  try {
+    console.log("Connecting to Firebase Emulators...");
+    console.log("Connecting to Auth Emulator...");
+    const auth = fb.getAuth();
+    auth.useEmulator(process.env.AUTH_URL);
+    console.log("Success! Connecting to Database Emulator...");
+    const db = fb.getDatabase();
+    db.useEmulator(process.env.DATABASE_URL, process.env.DATABASE_PORT);
+    console.log("Success!")
+  } catch (error) {
+    console.error("Error occurred connecting to emulators:", error);
+    process.exit(1);
+  }
 }
 
-const app = express();
+const expressApp = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
+expressApp.use(cors());
+expressApp.use(express.json());
 
-app.use('/api/web/users', webUserRoutes);
-app.use('/api/app/users', appUserRoutes);
+expressApp.use('/api/web/users', webUserRoutes);
+expressApp.use('/api/app/users', appUserRoutes);
 
-app.listen(port, () => console.log(`Express app listening on ${port}`));
+expressApp.listen(port, console.log(`Express app listening on ${port}`));
