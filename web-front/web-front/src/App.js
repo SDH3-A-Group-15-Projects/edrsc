@@ -1,8 +1,7 @@
-import './App.css';
 import { Routes, Route} from 'react-router-dom';
 import SignUp from './Components/SignUp/SignUp';
 import LogIn from './Components/LogIn/Login';
-import Welcome from './Components/Welcome/Welcome'
+import Welcome from './Components/Welcome/Welcome';
 
 
 function App() {

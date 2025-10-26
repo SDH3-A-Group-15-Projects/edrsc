@@ -35,6 +35,7 @@ const LogIn = () => {
                     <input type="password" placeholder='Password' />
                 </div>
         </div>
+        
         <div className="submit-container">
         <Link to="/welcome" className="submit">Log In</Link>
         </div>
