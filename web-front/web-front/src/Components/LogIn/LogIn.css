@@ -2,9 +2,10 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    margin-top: 200px;
+    margin-top: 150px;
     width: 600px;
-    padding-bottom: 30px;
+    padding-bottom: 30px 0 80px;
+    box-sizing: border-box;
 }
 
 .header{
@@ -33,7 +34,7 @@
 }
 
 .inputs{
-    margin-top: 55px;
+    margin-top: 40px;
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -44,7 +45,7 @@
     align-items: center;
     margin: auto;
     width: 480px;
-    height: 80px;
+    height: 60px;
     background: #eaeaea;
     border-radius: 6px;
 }
@@ -65,8 +66,8 @@
 
 .submit-container{
     display: flex;
-    gap: 30px;
-    margin: 60px auto;
+    justify-content: center;
+    margin-top: 40px;
 }
 
 .submit{
@@ -97,14 +98,14 @@
     mix-blend-mode:unset;
 }
 
-.signInLink {
+.signUpLink {
     padding-right: 62px;
     color: #fff;
     margin-top: 27px;
     font-size: 18px;
 }
 
-.signInLink a{
+.signUpLink a {
     color: #6c63FF;
     cursor: pointer;
 }
