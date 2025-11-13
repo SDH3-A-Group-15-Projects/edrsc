@@ -1,12 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import './LogIn.css'
 
 import email_icon from '../Assets/email icon.png'
 import password_icon from '../Assets/password icon.png'
 import dementia_logo from '../Assets/dementia logo.png'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginWithEmail } from "../../utils/logInWithEmail";
 
 const LogIn = () => {
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            alert("Please fill in both email and password.");
+            return;
+        }
+
+        try {
+            const user = await loginWithEmail(email, password);
+            alert("Login succesful!");
+
+            const lastName = user?.lastName;
+            navigate("/welcome", { state: { lastName }});
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
+    };
 
     return (
     <>
@@ -28,17 +50,16 @@ const LogIn = () => {
             <div className="inputs">
                 <div className="input">
                     <img src={email_icon} height={25} width={25} alt="" />
-                    <input type="email" placeholder='Email' />
+                    <input type="email" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
                 <div className="input">
                     <img src={password_icon} height={25} width={25} alt="" />
-                    <input type="password" placeholder='Password' />
+                    <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
         </div>
         
-        <div className="submit-container">
-        <Link to="/welcome" className="submit">Log In</Link>
-        </div>
+
+        <div className="submit" onClick={handleLogin}>Log In</div>
 
       </div>
     </>

@@ -1,0 +1,98 @@
+.top-right-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #243b55;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.logo img {
+    border-radius: 8px;
+}
+
+.header {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.header .text {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+    background-color: #f6f8fb;
+    min-height: 80vh;
+}
+
+.table-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 900px;
+}
+
+.table-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.patient-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.patient-table th,
+.patient-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.patient-table th {
+    background-color: #243b55;
+    color: white;
+    font-weight: 500;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-btn,
+.back-btn {
+    background-color: #243b55;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.add-btn:hover,
+.back-btn:hover {
+    background-color: #1b2c42;
+}
+
+.back-btn {
+    background-color: #6c757d;
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
