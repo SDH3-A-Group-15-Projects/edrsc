@@ -1,25 +1,43 @@
-import { auth } from "../index.js";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseConfig.js";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 
-export async function registerNewUser(email, password) {
+export async function registerNewUser(firstName, lastName, email, password) {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    // User account created & signed in!
-    const user = userCredential.user;
-    console.log("User created successfully:", user);
-    console.log("User ID:", user.uid);
-    console.log("User email:", user.email);
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      const idToken = await user.getIdToken();
 
-    console.log("Operation Type:", userCredential.operationType);
+      await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile`, {
+          method: "POST",
+          body: JSON.stringify({
+              uid: user.uid,
+              email: email,
+              firstName: firstName,
+              lastName: lastName
+          }),
+          headers: {
+              "Authorization": `Bearer ${idToken}`,
+              "Content-Type": "application/json"
+          }
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.ok) console.log(res);
+          else throw(Error(`HTTP ${res.status} - ${res.statusText}`));
+        });
 
-    return user; 
+      console.log("User created with UID ", user.uid);
+      console.log("User email:", user.email);
+
+      console.log("Operation Type:", userCredential.operationType);
+    });
   } catch (error) {
-
     const errorCode = error.code;
     const errorMessage = error.message;
-    console.error("Error creating user:", errorCode, errorMessage);
-
+    console.error("Error in creating user:", errorCode, errorMessage);
+    
     if (errorCode === 'auth/email-already-in-use') {
       alert("This email address is already in use!");
     } else if (errorCode === 'auth/weak-password') {
