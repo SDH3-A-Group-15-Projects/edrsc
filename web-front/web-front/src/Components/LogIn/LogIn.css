@@ -64,12 +64,6 @@
     font-size: 19px; 
 }
 
-.submit-container{
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-}
-
 .submit{
     display: flex;
     justify-content: center;
