@@ -1,0 +1,145 @@
+.ps-top-right-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.ps-logo {
+    font-size: x-large;
+    font-weight: 700;
+    mix-blend-mode: unset;
+}
+
+.ps-title {
+    font-size: 20px;
+    color: #243b55;
+    text-align: right;
+}
+
+.ps-header {
+    display: flex;
+    justify-content: center;
+    margin-top: 120px;
+    margin-bottom: 20px;
+}
+
+.ps-text {
+    color: #344862;
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+    width: 300px;
+}
+
+.ps-backdrop {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.ps-table-container {
+    width: 85%;
+    max-width: 1000px;
+    background-color: #ffffff;
+    padding: 0;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+    max-height: 70vh;
+    overflow: hidden;
+}
+
+.ps-table-container h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #344862;
+    font-weight: 700;
+}
+
+.ps-patient-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ps-patient-table th,
+.ps-patient-table td {
+    padding: 14px 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.ps-patient-table th {
+    background-color: #243b55;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ps-patient-table tr:nth-child(even) {
+    background-color: #f2f6fc;
+}
+
+.ps-patient-table tr:hover {
+    background-color: #e9f2ff;
+}
+
+.ps-patient-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.ps-patient-link:hover {
+    text-decoration: underline;
+}
+
+.ps-submit-container {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.ps-submit, .dash-link, .ps-add-btn {
+    background-color: #344862;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ps-submit:hover,
+.dash-link:hover,
+.ps-add-btn:hover {
+    background-color: #1f3247;
+}
+
+.dash-link {
+    background-color: #344862;
+}
+
+.dash-link:hover {
+    background-color: #1f3247;
+}
+
+.ps-table-title {
+    background-color: #e5e7eb;
+    color: #344862;
+    padding: 18px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    border-bottom: 2px solid #d1d5db;
+}

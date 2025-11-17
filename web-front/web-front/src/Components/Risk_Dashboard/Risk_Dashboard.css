@@ -1,0 +1,182 @@
+.top-right-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    margin-bottom: 30px;
+}
+
+.text {
+    color: #344862;
+    font-size: 48px;
+    font-weight: 700;
+    width: 300px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.logo {
+    font-size: x-large;
+    text-align: end;
+    mix-blend-mode: unset;
+}
+
+.title {
+    text-align: end;
+    top: 0px;
+    right: 0px;
+    color: #fff;
+    font-size: x-large;
+}
+
+.submit-container {
+    display: flex;
+    gap: 30px;
+    margin: 60px auto;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 59px;
+    color: #fff;
+    background: #344862;
+    border-radius: 50px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.patient-info-table {
+    width: 400px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background-color: #ffffffcc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.patient-info-table th {
+    background-color: #4a6fa5;
+    color: white;
+    font-size: 1.2rem;
+    padding: 15px;
+    text-align: center;
+}
+
+.patient-info-table td {
+    padding: 12px 20px;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+.patient-info-table tr:last-child td {
+    border-bottom: none;
+}
+
+.patient-info-table td:first-child {
+    text-align: left;
+}
+
+.patient-info-table td:last-child {
+    text-align: right;
+    font-weight: 600;
+}
+
+.patient-name {
+    font-size: 1.4rem;
+    text-transform: capitalize;
+}
+
+body {
+    font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6fa;
+    margin: 0;
+    padding: 0;
+}
+
+.backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 70vh;
+    padding: 20px;
+}
+
+.info-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.patient-info-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    width: 80%;
+    margin-top: 20px;
+    background-color: #ffffffb8;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.patient-side-info {
+    max-width: 350px;
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.patient-details-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #344862;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+.report-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.report-button {
+    background-color: #344862;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 180px;
+}
+
+.report-button:hover {
+    background-color: #2a3852;
+}
+
+.table-container,
+.patient-info-section,
+.patient-side-info {
+    background-color: rgba(255, 255, 255, 0.85);
+}

@@ -1,4 +1,4 @@
-import { auth } from "..index/.js";
+import { auth } from "../index.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 
@@ -21,7 +21,7 @@ export async function loginWithEmail(email, password) {
             alert("No account found with this email.");
         } else if (errorCode === 'auth/wrong-password') {
             alert("Incorrect password. Please try again.");
-        } else if (errorCode === 'auth/incalid-email') {
+        } else if (errorCode === 'auth/invalid-email') {
             alert("The email address is badly formatted.");
         } else {
             alert("Login failed. Please try again.");

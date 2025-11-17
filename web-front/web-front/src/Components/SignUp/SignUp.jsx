@@ -1,13 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './SignUp.css'
 
 import person_icon from '../Assets/person icon.png'
 import email_icon from '../Assets/email icon.png'
 import password_icon from '../Assets/password icon.png'
 import dementia_logo from '../Assets/dementia logo.png'
-import { Link } from 'react-router-dom';
+import { Await, Link, useNavigate } from 'react-router-dom';
+import { registerNewUser } from '../../utils/createAccountWithEmail'
+
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignUp = async () => {
+    if (!firstName || !lastName || !email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    try {
+      await registerNewUser(email, password);
+      navigate('/Welcome', { state: {lastName}});
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
   return (
     <>
       <div className='top-right-container'>
@@ -29,23 +51,23 @@ const SignUp = () => {
         <div className="inputs">
           <div className="input">
             <img src={person_icon} height={25} width={25} alt="" />
-            <input type="text" placeholder='First Name' />
+            <input type="text" placeholder='First Name' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div className="input">
             <img src={person_icon} height={25} width={25} alt="" />
-            <input type="text" placeholder='Last Name' />
+            <input type="text" placeholder='Last Name' value={lastName} onChange={(e) => setLastName(e.target.value)}/>
           </div>
           <div className="input">
             <img src={email_icon} height={25} width={25} alt="" />
-            <input type="email" placeholder='Email' />
+            <input type="email" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)}/>
           </div>
           <div className="input">
             <img src={password_icon} height={25} width={25} alt="" />
-            <input type="password" placeholder='Password' />
+            <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}/>
           </div>
         </div>
 
-          <div className="submit">Sign Up</div>
+          <div className="submit" onClick={handleSignUp}>Sign Up</div>
         </div>
     </>
   )
