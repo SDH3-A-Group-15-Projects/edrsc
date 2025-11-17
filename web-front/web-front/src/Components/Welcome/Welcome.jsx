@@ -12,19 +12,25 @@ const Welcome = () => {
         {
             name: "Coleman, Alan",
             dob: "09-04-1983",
-            medication: "Donepezil",
+            AggregatedRisk: 0.5,
+            questionnaireAverageRisk: 0.5,
+            voiceAverageRisk: 0.5,
             id: 1,
         },
         {
             name: "Smith, Jane",
             dob: "12-11-1978",
-            medication: "Memantine",
+            AggregatedRisk: 0.4,
+            questionnaireAverageRisk: 0.6,
+            voiceAverageRisk: 0.2,
             id: 2,
         },
         {
             name: "Brown, Michael",
             dob: "03-23-1959",
-            medication: "Rivastigmine",
+            AggregatedRisk: 0.7,
+            questionnaireAverageRisk: 0.6,
+            voiceAverageRisk: 0.8,
             id: 3,
         },
     ];
@@ -48,19 +54,23 @@ const Welcome = () => {
                     <tr>
                         <th>Name</th>
                         <th>Date of Birth</th>
-                        <th>Medication</th>
+                        <th>Aggregate Risk</th>
+                        <th>Questionnaire Average risk</th>
+                        <th>Speech Average risk</th>
                     </tr>
                 </thead>
                 <tbody>
                     {patients.map((patient) => (
                         <tr key={patient.id}>
                             <td>
-                                <Link to="/risk-dashboard" state={{ patient }} className="patient-link">
+                                <Link to="/dashboard" state={{ patient }} className="patient-link">
                                     {patient.name}
                                 </Link>
                             </td>
                             <td>{patient.dob}</td>
-                            <td>{patient.medication}</td>
+                            <td>{patient.AggregatedRisk*100}%</td>
+                            <td>{patient.questionnaireAverageRisk*100}%</td>
+                            <td>{patient.voiceAverageRisk*100}%</td>
                         </tr>
                     ))}
                 </tbody>
