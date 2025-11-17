@@ -9,4 +9,6 @@ router.post('/:uid/profile', authenticateToken, WebUserController.createUserProf
 router.put('/:uid/profile', authenticateToken, WebUserController.updateUserProfile);
 router.delete('/:uid/profile', authenticateToken, WebUserController.deleteUserProfile);
 
+router.post('/:uid/questionnaire', authenticateToken, WebUserController.createUserProfile);
+
 export default router;

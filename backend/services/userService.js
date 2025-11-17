@@ -14,7 +14,7 @@ class UserService {
         }
     }
 
-    static async createUserProfile(Model, uid, firstName, lastName, email) {
+    static async createUserProfile(Model, uid, firstName, lastName, email, details) {
         try {
             this.validateUserProfileInputs(firstName, lastName, email);
         } catch (e) {
@@ -31,7 +31,7 @@ class UserService {
         updatedAt: date
         };
 
-        return await Model.createUserProfile(uid, profileData);
+        return await Model.createUserProfile(uid, profileData, details);
     }
 
     static async getUserProfile(Model, uid) {
