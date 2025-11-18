@@ -32,6 +32,19 @@ class AppUserModel extends UserModel {
       console.error("Error adding questionnaire entry:", error);
     });
   }
+
+  static async submitVoice(uid, voice) {
+    const voiceRef = db.ref(`${this._dbRef}/${uid}/results/voice`);
+    voiceRef.push(newVoiceEntry)
+    .then((snapshot) => {
+      console.log("New voice for user", uid, "with key:", snapshot.key);
+      console.log("Full reference:", snapshot.ref.toString());
+      return voice;
+    })
+    .catch((error) => {
+      console.error("Error adding voice entry:", error);
+    });
+  }
 }
 
 export default AppUserModel;

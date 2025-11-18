@@ -42,6 +42,50 @@ class AppUserService extends UserService {
 
         return await super.submitQuestionnaire(AppUserModel, uid, questionnaire);
     }
+
+    static async submitVoice(uid, voice) {
+        try {
+            let voiceResult = {
+                calculatedRisk: 0,
+            }
+
+            const form = new FormData();
+            form.append("audioInput", voice.buffer, {
+                filename: voice.originalname,
+                contentType: voice.mimetype
+            });
+
+            const aiResponse = await fetch("http://localhost:3002/voice", {
+                method: "POST",
+                headers: {
+                    ...form.getHeaders(),
+                },
+                body: form,
+                
+            })
+            .then(response => response.json())
+            .then(data => voice.calculatedRisk = data.calculatedRisk)
+            .catch(error => console.error("Error:", error));
+
+            return await super.submitVoice(AppUserModel, uid, voiceResult);
+        }
+        catch (e) {
+            return null;
+        }
+
+        await fetch("http://localhost:3002/voice", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(questionnaire)
+        })
+        .then(response => response.json())
+        .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
+        .catch(error => console.error("Error:", error));
+
+        return await super.submitQuestionnaire(AppUserModel, uid, questionnaire);
+    }
 }
 
 export default AppUserService;
