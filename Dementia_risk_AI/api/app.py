@@ -2,13 +2,14 @@ from flask import Flask, request, jsonify
 import joblib
 import os
 from utils.features_extraction import extract_speech_features
+import pandas as pd
 
 app = Flask(__name__)
 
 # Dynamically find base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-#Correct absolute paths
+# Correct absolute paths
 model_path = os.path.join(BASE_DIR, "Model", "model", "risk_model.pkl")
 scaler_path = os.path.join(BASE_DIR, "Model", "model", "scaler.pkl")
 
@@ -16,9 +17,17 @@ scaler_path = os.path.join(BASE_DIR, "Model", "model", "scaler.pkl")
 model = joblib.load(model_path)
 scaler = joblib.load(scaler_path)
 
-@app.route("/predict", methods=["POST"], )
+# ===== Root endpoint to avoid 404 =====
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"message": "Flask API is running!"})
+
+
+@app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
+
+    print("Received JSON:", data, flush=True)  # moved before return
 
     try:
         age = data["age"]
@@ -29,8 +38,9 @@ def predict():
         # Extract speech features
         word_count, avg_word_len, filler_count = extract_speech_features(speech_text)
 
-        # Prepare and scale input
-        X_new = [[age, sleep_hours, memory_score,0,0,0]]
+        feature_names = ["age", "sleep_hours", "memory_score", "word_count", "avg_word_len", "filler_count"]
+        X_new = pd.DataFrame([[age, sleep_hours, memory_score, word_count, avg_word_len, filler_count]],
+                             columns=feature_names)
         X_scaled = scaler.transform(X_new)
 
         # Predict
@@ -44,15 +54,15 @@ def predict():
                 "High Risk": round(probability[1] * 100, 2)
             }
         }
+
+        print("Returning:", result, flush=True)
         return jsonify(result)
 
     except Exception as e:
+        print("Error:", str(e), flush=True)
         return jsonify({"error": str(e)}), 400
-
-    print("Received JSON:", data, flush=True)
-    print("Returning:", result, flush=True)
-
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    print("Starting Flask API on 0.0.0.0:5000", flush=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
