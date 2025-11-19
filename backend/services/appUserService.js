@@ -2,7 +2,7 @@ import UserService from "./userService.js";
 import AppUserModel from "../models/appUserModel.js";
 
 class AppUserService extends UserService {
-    static async createUserProfile(uid, firstName, lastName, email) {
+    static async createUserProfile(uid, firstName, lastName, email, dateOfBirth) {
         const details = {
             riskFactors: {},
             results: {
@@ -13,7 +13,7 @@ class AppUserService extends UserService {
             conversations: {},
         }
 
-        return await super.createUserProfile(AppUserModel, uid, firstName, lastName, email, details);
+        return await super.createUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth, details);
     }
 
     static async getUserProfile(uid) {
@@ -23,8 +23,8 @@ class AppUserService extends UserService {
     /**
      * @todo: update with new schema
      */
-    static async updateUserProfile(uid, firstName, lastName, email) {
-        return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email);
+    static async updateUserProfile(uid, firstName, lastName, email, dateOfBirth) {
+        return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth);
     }
 
     static async deleteUserProfile(uid) {

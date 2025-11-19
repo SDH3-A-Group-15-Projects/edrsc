@@ -2,7 +2,7 @@ import { db } from '../utils/firebaseConfig.js';
 
 class UserModel {
   static async createUserProfile(dbRef, uid, profileData, details) {
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     await userProfileRef.set(profileData);
     for (p in details) await userProfileRef.set(p);
     const snapshot = await userProfileRef.once('value');
@@ -11,7 +11,7 @@ class UserModel {
   }
 
   static async getUserProfile(dbRef, uid) {
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     const snapshot = await userProfileRef.once('value');
 
     if (snapshot.exists()) return snapshot.val();
@@ -19,7 +19,7 @@ class UserModel {
   }
 
   static async updateUserProfile(dbRef, uid, profileDataUpdate) {
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     await userProfileRef.update(profileDataUpdate)
     const snapshot = await userProfileRef.once('value');
     if (snapshot.exists()) return snapshot.val();
@@ -27,7 +27,7 @@ class UserModel {
   }
 
   static async deleteUserProfile(dbRef, uid) {
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     try {
       await userProfileRef.remove();
       return true;

@@ -14,7 +14,7 @@ class UserService {
         }
     }
 
-    static async createUserProfile(Model, uid, firstName, lastName, email, details) {
+    static async createUserProfile(Model, uid, firstName, lastName, email, dateOfBirth, details) {
         try {
             this.validateUserProfileInputs(firstName, lastName, email);
         } catch (e) {
@@ -27,6 +27,7 @@ class UserService {
         firstName: firstName,
         lastName: lastName,
         email: email,
+        dateOfBirth: dateOfBirth,
         createdAt: date,
         updatedAt: date
         };
@@ -38,7 +39,7 @@ class UserService {
         return await Model.getUserProfile(uid);
     }
 
-    static async updateUserProfile(Model, uid, firstName, lastName, email) {
+    static async updateUserProfile(Model, uid, firstName, lastName, email, dateOfBirth) {
         try {
             this.validateUserProfileInputs(firstName, lastName, email);
         } catch (e) {
@@ -49,6 +50,7 @@ class UserService {
         firstName: firstName,
         lastName: lastName,
         email: email,
+        dateOfBirth: dateOfBirth,
         updatedAt: new Date().toISOString()
         };
 

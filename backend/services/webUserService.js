@@ -5,7 +5,7 @@ import AppUserModel from "../models/appUserModel.js";
 
 class WebUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email) {
-        return await super.createUserProfile(WebUserModel, uid, firstName, lastName, email);
+        return await super.createUserProfile(WebUserModel, uid, firstName, lastName, email, "1970-01-01", {patients: []});
     }
 
     static async getUserProfile(uid) {
@@ -13,7 +13,7 @@ class WebUserService extends UserService {
     }
 
     static async updateUserProfile(uid, firstName, lastName, email) {
-        return await super.updateUserProfile(WebUserModel, uid, firstName, lastName, email);
+        return await super.updateUserProfile(WebUserModel, uid, firstName, lastName, email, "1970-01-01");
     }
 
     static async deleteUserProfile(uid) {

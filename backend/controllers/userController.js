@@ -1,7 +1,7 @@
 class UserController {
     static async createUserProfile(Service, req, res) {
         try {
-            const { firstName, lastName } = req.body;
+            const { firstName, lastName, dateOfBirth } = req.body;
             const uid = req.user.uid;
             const email = req.user.email;
 
@@ -9,7 +9,7 @@ class UserController {
                 return res.status(400).send("First and Last name is required.");
             }
 
-            const newUserProfile = await Service.createUserProfile(uid, firstName, lastName, email);
+            const newUserProfile = await Service.createUserProfile(uid, firstName, lastName, email, dateOfBirth);
             res.status(201).json(newUserProfile);
         } catch (e) {
             console.error(e.message);
@@ -34,11 +34,11 @@ class UserController {
 
     static async updateUserProfile(Service, req, res) {
         try {
-            const { firstName, lastName } = req.body;
+            const { firstName, lastName, dateOfBirth } = req.body;
             const uid = req.user.uid;
             const email = req.user.email;
 
-            const profileDataUpdate = await Service.updateUserProfile(uid, firstName, lastName, email);
+            const profileDataUpdate = await Service.updateUserProfile(uid, firstName, lastName, email, dateOfBirth);
             res.status(200).json(profileDataUpdate);
         } catch (e) {
             console.error(e.message);
