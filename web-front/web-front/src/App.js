@@ -4,6 +4,8 @@ import LogIn from './Components/LogIn/Login';
 import Welcome from './Components/Welcome/Welcome';
 import Risk_Dashboard from './Components/Risk_Dashboard/Risk_Dashboard';
 import Patient_Selection from './Components/Patient_Selection/patient_selection';
+import Report from './Components/Report/report';
+import MedicalNews from './Components/MedicalNews/MedicalNews';
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
       <Route path="/welcome" element={<Welcome />} />
       <Route path="/dashboard" element={<Risk_Dashboard />} />
       <Route path="/patients" element={<Patient_Selection/>}/>
+      <Route path="/report" element={<Report/>}/>
+      <Route path="/news" element={<MedicalNews/>}/>
     </Routes>
   );
 }

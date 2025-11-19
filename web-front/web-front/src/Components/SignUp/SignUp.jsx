@@ -24,7 +24,7 @@ const SignUp = () => {
     }
     try {
       await registerNewUser(email, password);
-      navigate('/Welcome', { state: {lastName}});
+      navigate('/patients', { state: {lastName}});
     } catch (err) {
       console.error(err);
     }

@@ -24,7 +24,7 @@ const LogIn = () => {
             alert("Login succesful!");
 
             const lastName = user?.lastName;
-            navigate("/welcome", { state: { lastName }});
+            navigate("/patients", { state: { lastName }});
         } catch (error) {
             console.error("Login failed:", error);
         }
