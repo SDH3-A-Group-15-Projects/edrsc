@@ -20,12 +20,50 @@ class AppUserService extends UserService {
         return await super.getUserProfile(AppUserModel, uid);
     }
 
+    /**
+     * @todo: update with new schema
+     */
     static async updateUserProfile(uid, firstName, lastName, email) {
         return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email);
     }
 
     static async deleteUserProfile(uid) {
         return await super.deleteUserProfile(AppUserModel, uid);
+    }
+
+    static async updateUserResults(uid, results) {
+        return await AppUserModel.updateUserResults(uid, results);
+    }
+
+    static async recalculateAvgRisk(uid) {
+        let profile = await this.getUserProfile(uid);
+        let results = profile.results;
+
+        let qRisk;
+        let qCount = 0;
+        let vRisk;
+        let vCount = 0;
+        let avgRisk;
+
+        for (q of results.questionnaire) {
+            qRisk += q.calculatedRisk;
+            qCount++;
+        }
+
+        for (v of results.voice) {
+            vRisk += v.calculatedRisk;
+            vCount++;
+        }
+
+        qRisk = qRisk / qCount;
+        vRisk = vRisk / vCount;
+        avgRisk = (qRisk + vRisk) / 2;
+        
+        results.questionnaireAverageRisk = qRisk;
+        results.voiceAverageRisk = vRisk;
+        results.averageRisk = avgRisk;
+
+        return results;
     }
 
     static async submitQuestionnaire(uid, questionnaire) {
@@ -40,7 +78,12 @@ class AppUserService extends UserService {
         .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
         .catch(error => console.error("Error:", error));
 
-        return await super.submitQuestionnaire(AppUserModel, uid, questionnaire);
+        await AppUserModel.submitQuestionnaire(uid, questionnaire);
+
+        const newResults = await this.recalculateAvgRisk(uid);
+        // If this does not return null
+        if (await this.updateUserResults(uid, newResults)) return questionnaire;
+        else return null;
     }
 
     static async submitVoice(uid, voice) {
@@ -67,24 +110,16 @@ class AppUserService extends UserService {
             .then(data => voice.calculatedRisk = data.calculatedRisk)
             .catch(error => console.error("Error:", error));
 
-            return await super.submitVoice(AppUserModel, uid, voiceResult);
+            await AppUserModel.submitVoice(uid, voiceResult);
+
+            const newResults = await this.recalculateAvgRisk(uid);
+            // If this does not return null
+            if (await this.updateUserResults(uid, newResults)) return voiceResult;
+            else return null;
         }
         catch (e) {
             return null;
         }
-
-        await fetch("http://localhost:3002/voice", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(questionnaire)
-        })
-        .then(response => response.json())
-        .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
-        .catch(error => console.error("Error:", error));
-
-        return await super.submitQuestionnaire(AppUserModel, uid, questionnaire);
     }
 }
 

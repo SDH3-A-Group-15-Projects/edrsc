@@ -20,6 +20,14 @@ class AppUserModel extends UserModel {
     return await super.deleteUserProfile(this._dbRef, uid);
   }
 
+  static async updateUserResults(uid, results) {
+    const userResultsRef = db.ref(`${dbRef}/${uid}`);
+    await userResultsRef.update(results);
+    const snapshot = await userResultsRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
+  }
+
   static async submitQuestionnaire(uid, questionnaire) {
     const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire`);
     questionnaireRef.push(newQuestionnaireEntry)
