@@ -29,7 +29,15 @@ class AppUserModel extends UserModel {
   }
 
   static async deleteUserProfile(uid) {
-    return await super.deleteUserProfile(this._dbRef, uid);
+    try {
+      await db.ref(`${dbRef}/${uid}/riskfactors`).remove();
+      await db.ref(`${dbRef}/${uid}/results`).remove();
+      return await super.deleteUserProfile(this._dbRef, uid);
+    } catch (e) {
+      console.error(e);
+      console.trace();
+      return false;
+    }
   }
 
   static async updateUserResults(uid, results) {

@@ -28,8 +28,15 @@ class WebUserModel extends UserModel {
   }
 
   static async deleteUserProfile(uid) {
-    return await super.deleteUserProfile(this._dbRef, uid);
-  }
+      try {
+        await db.ref(`${dbRef}/${uid}/patients`).remove();
+        return await super.deleteUserProfile(this._dbRef, uid);
+      } catch (e) {
+        console.error(e);
+        console.trace();
+        return false;
+      }
+    }
 
   static async addPatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients`);
