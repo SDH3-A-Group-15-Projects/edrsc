@@ -29,7 +29,7 @@ class WebUserService extends UserService {
         else return null;
     }
 
-    static async getPatients(uid, patientUID) {
+    static async getPatients(uid) {
         let patients = [];
         const patientUIDs = await WebUserModel.getPatients(uid);
         if (patientUIDs){
@@ -52,11 +52,22 @@ class WebUserService extends UserService {
     static async removePatient(uid, patientUID) {
         return await WebUserModel.removePatient(uid, patientUID);
     }
-}
 
-/**
- * @todo
- * static async getReport()
-*/
+    static async generateReport(patientUID) {
+        const patient = await AppUserModel.getUserProfile(patientUID);
+        if (patient) {
+            return {
+                profile: {
+                    firstName: patient.profile.firstName,
+                    lastName: patient.profile.lastName,
+                    dateOfBirth: patient.profile.dateOfBirth
+                },
+                riskFactors: patient.riskFactors,
+                results: patient.results
+            }
+        }
+        else return null;
+    }
+}
 
 export default WebUserService;

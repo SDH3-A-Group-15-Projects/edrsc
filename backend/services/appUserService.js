@@ -19,7 +19,8 @@ class AppUserService extends UserService {
     }
 
     static async getUserProfile(uid) {
-        return await super.getUserProfile(AppUserModel, uid);
+        const patient = await super.getUserProfile(AppUserModel, uid);
+        return patient.profile;
     }
 
     static async updateUserProfile(uid, firstName, lastName, email, dateOfBirth) {
@@ -133,10 +134,6 @@ class AppUserService extends UserService {
 
         await AppUserModel.submitRiskFactors(uid, riskFactors);
     }
-
-    /**
-     * @todo static async submitRiskFactors()
-     */
 }
 
 export default AppUserService;

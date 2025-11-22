@@ -82,6 +82,24 @@ class WebUserController extends UserController {
             else return res.status(500).send(e.message);
         }
     }
+
+    static async generateReport(req, res) {
+        try {
+            const patientUID = req.params.patientuid;
+
+            const report = await WebUserService.generateReport(patientUID);
+            if (report) return res.status(201).json(report);
+            else {
+                res.status(404);
+                throw("No patient found with UID", patientUID);
+            }
+        } catch (e) {
+            console.error(e.message);
+            console.trace();
+            if (res.status) return res.status(res.status).send(e.message);
+            else return res.status(500).send(e.message);
+        }
+    }
 }
 
 export default WebUserController;

@@ -21,7 +21,19 @@ class AppUserModel extends UserModel {
   }*/
 
   static async getUserProfile(uid) {
-    return await super.getUserProfile(this._dbRef, uid);
+    let patient;
+
+    patient.profile = await super.getUserProfile(this._dbRef, uid);
+
+    const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+    if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+    else patient.riskFactors = null;
+
+    const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+    if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+    else patient.results = null;
+
+    return patient;
   }
 
   static async updateUserProfile(uid, profileDataUpdate) {
@@ -30,8 +42,8 @@ class AppUserModel extends UserModel {
 
   static async deleteUserProfile(uid) {
     try {
-      await db.ref(`${dbRef}/${uid}/riskfactors`).remove();
-      await db.ref(`${dbRef}/${uid}/results`).remove();
+      await db.ref(`${this._dbRef}/${uid}/riskfactors`).remove();
+      await db.ref(`${this._dbRef}/${uid}/results`).remove();
       return await super.deleteUserProfile(this._dbRef, uid);
     } catch (e) {
       console.error(e);
@@ -75,7 +87,7 @@ class AppUserModel extends UserModel {
   }
 
   static async submitRiskFactors(uid, riskFactors) {
-    const riskFactorsRef = db.ref(`${dbRef}/${uid}/riskfactors`);
+    const riskFactorsRef = db.ref(`${this._dbRef}/${uid}/riskfactors`);
     await riskFactorsRef.set(riskFactors);
     const snapshot = await riskFactorsRef.once('value');
     if (snapshot.exists()) return snapshot.val();
