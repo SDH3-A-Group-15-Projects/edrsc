@@ -5,3 +5,5 @@ functions/
 *.log
 .firebaserc
 .github/*
+key.json
+untitled.json

@@ -1,4 +1,5 @@
 import UserModel from './userModel.js';
+import { db } from '../utils/firebaseConfig.js';
 
 class AppUserModel extends UserModel {
   static _dbRef = "app/users";
@@ -7,8 +8,32 @@ class AppUserModel extends UserModel {
     return await super.createUserProfile(this._dbRef, uid, profileData);
   }
 
+  /*static async createPatientData(uid, details) {
+    try {
+      await db.ref(`${this._dbRef}/${uid}/riskfactors`).set(details.riskFactors);
+      await db.ref(`${this._dbRef}/${uid}/results`).set(details.results);
+      return true;
+    } catch (e) {
+      console.error(e);
+      console.trace();
+      return false;
+    }
+  }*/
+
   static async getUserProfile(uid) {
-    return await super.getUserProfile(this._dbRef, uid);
+    let patient;
+
+    patient.profile = await super.getUserProfile(this._dbRef, uid);
+
+    const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+    if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+    else patient.riskFactors = null;
+
+    const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+    if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+    else patient.results = null;
+
+    return patient;
   }
 
   static async updateUserProfile(uid, profileDataUpdate) {
@@ -16,7 +41,57 @@ class AppUserModel extends UserModel {
   }
 
   static async deleteUserProfile(uid) {
-    return await super.deleteUserProfile(this._dbRef, uid);
+    try {
+      await db.ref(`${this._dbRef}/${uid}/riskfactors`).remove();
+      await db.ref(`${this._dbRef}/${uid}/results`).remove();
+      return await super.deleteUserProfile(this._dbRef, uid);
+    } catch (e) {
+      console.error(e);
+      console.trace();
+      return false;
+    }
+  }
+
+  static async updateUserResults(uid, results) {
+    const userResultsRef = db.ref(`${this._dbRef}/${uid}`);
+    await userResultsRef.update(results);
+    const snapshot = await userResultsRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
+  }
+
+  static async submitQuestionnaire(uid, questionnaire) {
+    const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire`);
+    questionnaireRef.push(questionnaire)
+    .then((snapshot) => {
+      console.log("New questionnaire for user", uid, "with key:", snapshot.key);
+      console.log("Full reference:", snapshot.ref.toString());
+      return questionnaire;
+    })
+    .catch((error) => {
+      console.error("Error adding questionnaire entry:", error);
+    });
+  }
+
+  static async submitVoice(uid, voice) {
+    const voiceRef = db.ref(`${this._dbRef}/${uid}/results/voice`);
+    voiceRef.push(voice)
+    .then((snapshot) => {
+      console.log("New voice for user", uid, "with key:", snapshot.key);
+      console.log("Full reference:", snapshot.ref.toString());
+      return voice;
+    })
+    .catch((error) => {
+      console.error("Error adding voice entry:", error);
+    });
+  }
+
+  static async submitRiskFactors(uid, riskFactors) {
+    const riskFactorsRef = db.ref(`${this._dbRef}/${uid}/riskfactors`);
+    await riskFactorsRef.set(riskFactors);
+    const snapshot = await riskFactorsRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
   }
 }
 

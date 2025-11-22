@@ -1,17 +1,16 @@
-import { getDatabase } from 'firebase-admin/database';
-import FirebaseConfig from '../utils/firebaseConfig.js';
+import { db } from '../utils/firebaseConfig.js';
 
 class UserModel {
   static async createUserProfile(dbRef, uid, profileData) {
-    const db = await FirebaseConfig.getFirebaseApp().getDatabase();
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     await userProfileRef.set(profileData);
-    return await userProfileRef.once('value').val();
+    const snapshot = await userProfileRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
   }
 
   static async getUserProfile(dbRef, uid) {
-    const db = await FirebaseConfig.getFirebaseApp().getDatabase();
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     const snapshot = await userProfileRef.once('value');
 
     if (snapshot.exists()) return snapshot.val();
@@ -19,15 +18,15 @@ class UserModel {
   }
 
   static async updateUserProfile(dbRef, uid, profileDataUpdate) {
-    const db = await FirebaseConfig.getFirebaseApp().getDatabase();
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     await userProfileRef.update(profileDataUpdate)
-    return await userProfileRef.once('value').val();
+    const snapshot = await userProfileRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
   }
 
   static async deleteUserProfile(dbRef, uid) {
-    const db = await FirebaseConfig.getFirebaseApp().getDatabase();
-    const userProfileRef = db.ref(`${dbRef}/${uid}`);
+    const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     try {
       await userProfileRef.remove();
       return true;
