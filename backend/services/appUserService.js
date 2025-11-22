@@ -22,9 +22,6 @@ class AppUserService extends UserService {
         return await super.getUserProfile(AppUserModel, uid);
     }
 
-    /**
-     * @todo: update with new schema
-     */
     static async updateUserProfile(uid, firstName, lastName, email, dateOfBirth) {
         return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth);
     }
@@ -122,6 +119,19 @@ class AppUserService extends UserService {
         catch (e) {
             return null;
         }
+    }
+
+    static async submitRiskFactors(uid, riskFactors) {
+        await fetch("http://localhost:3002/riskfactors", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(riskFactors)
+        })
+        .catch(error => console.error("Error:", error));
+
+        await AppUserModel.submitRiskFactors(uid, riskFactors);
     }
 
     /**

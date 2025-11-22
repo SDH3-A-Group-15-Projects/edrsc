@@ -42,7 +42,7 @@ class AppUserModel extends UserModel {
 
   static async submitQuestionnaire(uid, questionnaire) {
     const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire`);
-    questionnaireRef.push(newQuestionnaireEntry)
+    questionnaireRef.push(questionnaire)
     .then((snapshot) => {
       console.log("New questionnaire for user", uid, "with key:", snapshot.key);
       console.log("Full reference:", snapshot.ref.toString());
@@ -55,7 +55,7 @@ class AppUserModel extends UserModel {
 
   static async submitVoice(uid, voice) {
     const voiceRef = db.ref(`${this._dbRef}/${uid}/results/voice`);
-    voiceRef.push(newVoiceEntry)
+    voiceRef.push(voice)
     .then((snapshot) => {
       console.log("New voice for user", uid, "with key:", snapshot.key);
       console.log("Full reference:", snapshot.ref.toString());
@@ -64,6 +64,14 @@ class AppUserModel extends UserModel {
     .catch((error) => {
       console.error("Error adding voice entry:", error);
     });
+  }
+
+  static async submitRiskFactors(uid, riskFactors) {
+    const riskFactorsRef = db.ref(`${dbRef}/${uid}/riskfactors`);
+    await riskFactorsRef.set(riskFactors);
+    const snapshot = await riskFactorsRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
   }
 }
 

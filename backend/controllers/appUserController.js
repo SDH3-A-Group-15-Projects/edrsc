@@ -55,6 +55,24 @@ class AppUserController extends UserController {
             else return res.status(500).send(e.message);
         }
     }
+
+    static async submitRiskFactors(req, res) {
+        try {
+            const riskFactors = req.body;
+
+            for (q in riskFactors) {
+                if (!riskFactors[q]) return res.status(400).send("All risk factors must be answered.");
+            }
+
+            const result = await AppUserService.submitRiskFactors(req.user.uid, riskFactors);
+            res.status(201).json(result);
+        } catch (e) {
+            console.error(e.message);
+            console.trace();
+            if (res.status) return res.status(res.status).send(e.message);
+            else return res.status(500).send(e.message);
+        }
+    }
 }
 
 export default AppUserController;

@@ -14,4 +14,6 @@ router.post('/:uid/results/questionnaire', authenticateToken, AppUserController.
 
 router.post('/:uid/results/voice', authenticateToken, handleAudioUpload, AppUserController.submitVoice);
 
+router.post('/:uid/results/riskfactors', authenticateToken, AppUserController.submitRiskFactors);
+
 export default router;
