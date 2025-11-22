@@ -18,7 +18,7 @@ class AppUserController extends UserController {
         return await super.deleteUserProfile(AppUserService, req, res);
     }
 
-    static async submitQuestionnaire(Service, req, res) {
+    static async submitQuestionnaire(req, res) {
         try {
             const questionnaire = req.body;
 
@@ -26,7 +26,7 @@ class AppUserController extends UserController {
                 if (questionnaire[q] == "") return res.status(400).send("All questions must be answered.");
             }
 
-            const result = await Service.submitQuestionnaire(req.user.uid, questionnaire);
+            const result = await AppUserService.submitQuestionnaire(req.user.uid, questionnaire);
             res.status(201).json(result);
         } catch (e) {
             console.error(e.message);
@@ -36,7 +36,7 @@ class AppUserController extends UserController {
         }
     }
 
-    static async submitVoice(Service, req, res) {
+    static async submitVoice(req, res) {
         try {
             const voice = req.file;
             if (!voice) {
@@ -45,7 +45,7 @@ class AppUserController extends UserController {
                 console.trace();
                 return res.status(400).send(errMsg);
             }
-            const result = await Service.submitVoice(req.user.uid, voice);
+            const result = await AppUserService.submitVoice(req.user.uid, voice);
             if (result) res.status(201).json(result);
             else throw("No response from API");
         } catch (e) {

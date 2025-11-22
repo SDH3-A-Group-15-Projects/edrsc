@@ -3,7 +3,7 @@ import AppUserModel from "../models/appUserModel.js";
 
 class AppUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email, dateOfBirth) {
-        const details = {
+        /*const details = {
             riskFactors: {},
             results: {
                 questionnaire: {},
@@ -11,9 +11,11 @@ class AppUserService extends UserService {
                 test: {}
             },
             conversations: {},
-        }
+        }*/
 
-        return await super.createUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth, details);
+        const createdProfile = await super.createUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth);
+        // if (createdProfile) await AppUserModel.createPatientData(uid, details);
+        return createdProfile;
     }
 
     static async getUserProfile(uid) {
@@ -39,11 +41,11 @@ class AppUserService extends UserService {
         let profile = await this.getUserProfile(uid);
         let results = profile.results;
 
-        let qRisk;
+        let qRisk = 0;
         let qCount = 0;
-        let vRisk;
+        let vRisk = 0;
         let vCount = 0;
-        let avgRisk;
+        let avgRisk = 0;
 
         for (q of results.questionnaire) {
             qRisk += q.calculatedRisk;
@@ -55,8 +57,8 @@ class AppUserService extends UserService {
             vCount++;
         }
 
-        qRisk = qRisk / qCount;
-        vRisk = vRisk / vCount;
+        if (qCount > 0) qRisk = qRisk / qCount;
+        if (vCount > 0) vRisk = vRisk / vCount;
         avgRisk = (qRisk + vRisk) / 2;
         
         results.questionnaireAverageRisk = qRisk;
@@ -121,6 +123,10 @@ class AppUserService extends UserService {
             return null;
         }
     }
+
+    /**
+     * @todo static async submitRiskFactors()
+     */
 }
 
 export default AppUserService;

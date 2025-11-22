@@ -1,10 +1,9 @@
 import { db } from '../utils/firebaseConfig.js';
 
 class UserModel {
-  static async createUserProfile(dbRef, uid, profileData, details) {
+  static async createUserProfile(dbRef, uid, profileData) {
     const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     await userProfileRef.set(profileData);
-    for (p in details) await userProfileRef.set(p);
     const snapshot = await userProfileRef.once('value');
     if (snapshot.exists()) return snapshot.val();
     else return null;

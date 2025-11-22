@@ -4,9 +4,21 @@ import { db } from '../utils/firebaseConfig.js';
 class AppUserModel extends UserModel {
   static _dbRef = "app/users";
 
-  static async createUserProfile(uid, profileData, details) {
-    return await super.createUserProfile(this._dbRef, uid, profileData, details);
+  static async createUserProfile(uid, profileData) {
+    return await super.createUserProfile(this._dbRef, uid, profileData);
   }
+
+  /*static async createPatientData(uid, details) {
+    try {
+      await db.ref(`${this._dbRef}/${uid}/riskfactors`).set(details.riskFactors);
+      await db.ref(`${this._dbRef}/${uid}/results`).set(details.results);
+      return true;
+    } catch (e) {
+      console.error(e);
+      console.trace();
+      return false;
+    }
+  }*/
 
   static async getUserProfile(uid) {
     return await super.getUserProfile(this._dbRef, uid);
@@ -21,7 +33,7 @@ class AppUserModel extends UserModel {
   }
 
   static async updateUserResults(uid, results) {
-    const userResultsRef = db.ref(`${dbRef}/${uid}`);
+    const userResultsRef = db.ref(`${this._dbRef}/${uid}`);
     await userResultsRef.update(results);
     const snapshot = await userResultsRef.once('value');
     if (snapshot.exists()) return snapshot.val();

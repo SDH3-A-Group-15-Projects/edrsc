@@ -18,7 +18,7 @@ class WebUserController extends UserController {
         return await super.deleteUserProfile(WebUserService, req, res);
     }
 
-    static async addPatient(Service, req, res) {
+    static async addPatient(req, res) {
         try {
             const patientUID = req.params.patientuid;
             const uid = req.user.uid;
@@ -42,7 +42,7 @@ class WebUserController extends UserController {
         }
     }
 
-    static async getPatients(Service, req, res) {
+    static async getPatients(req, res) {
         try {
             const uid = req.user.uid;
             const patients = await WebUserService.getPatients(uid);
@@ -50,6 +50,30 @@ class WebUserController extends UserController {
             else {
                 res.status(404);
                 throw("Patients not found");
+            }
+        } catch (e) {
+            console.error(e.message);
+            console.trace();
+            if (res.status) return res.status(res.status).send(e.message);
+            else return res.status(500).send(e.message);
+        }
+    }
+
+    static async removePatient(req, res) {
+        try {
+            const patientUID = req.params.patientuid;
+            const uid = req.user.uid;
+
+            if (!patientUID) {
+                res.status(400);
+                throw("No Patient UID specified.");
+            }
+
+            const deletedUID = await WebUserService.removePatient(uid, patientUID);
+            if (deletedUID) return res.status(201).send(`Removed patient with UID ${removedUID}`);
+            else {
+                res.status(404);
+                throw("No patient found with UID", patientUID);
             }
         } catch (e) {
             console.error(e.message);

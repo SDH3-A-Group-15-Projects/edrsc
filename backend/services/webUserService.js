@@ -5,7 +5,9 @@ import AppUserModel from "../models/appUserModel.js";
 
 class WebUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email) {
-        return await super.createUserProfile(WebUserModel, uid, firstName, lastName, email, "1970-01-01", {patients: []});
+        const createdProfile = await super.createUserProfile(WebUserModel, uid, firstName, lastName, email, "1970-01-01");
+        // if (createdProfile) await WebUserModel.createDoctorData(uid, {patients: []});
+        return createdProfile;
     }
 
     static async getUserProfile(uid) {
@@ -23,7 +25,7 @@ class WebUserService extends UserService {
     static async addPatient(uid, patientUID) {
         // Instead of rewriting this function, getting the patient profile to confirm the patient exists
         const patient = await AppUserModel.getUserProfile(patientUID);
-        if (patient) await WebUserModel.addPatient(uid, patientUID);
+        if (patient) return await WebUserModel.addPatient(uid, patientUID);
         else return null;
     }
 
@@ -46,6 +48,15 @@ class WebUserService extends UserService {
         } else return null;
         return patients;
     }
+
+    static async removePatient(uid, patientUID) {
+        return await WebUserModel.removePatient(uid, patientUID);
+    }
 }
+
+/**
+ * @todo
+ * static async getReport()
+*/
 
 export default WebUserService;
