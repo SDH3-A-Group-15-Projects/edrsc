@@ -78,27 +78,31 @@ class AppUserService extends UserService {
         .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
         .catch(error => console.error("Error:", error));
 
-        await AppUserModel.submitQuestionnaire(uid, questionnaire);
+        questionnaire.completionDate = new Date().toISOString();
+        questionnaire = await AppUserModel.submitQuestionnaire(uid, questionnaire);
 
-        const newResults = await this.recalculateAvgRisk(uid);
-        // If this does not return null
-        if (await this.updateUserResults(uid, newResults)) return questionnaire;
-        else return null;
+        if (questionnaire) {
+            const newResults = await this.recalculateAvgRisk(uid);
+            // If this does not return null
+            if (await this.updateUserResults(uid, newResults)) return questionnaire;
+            else return null;
+        } else return null;
     }
 
     static async submitVoice(uid, voice) {
         try {
             let voiceResult = {
                 calculatedRisk: 0,
+                completionDate: ""
             }
 
             const form = new FormData();
-            form.append("audioInput", voice.buffer, {
+            form.append("audioFile", voice.buffer, {
                 filename: voice.originalname,
                 contentType: voice.mimetype
             });
 
-            const aiResponse = await fetch("http://localhost:3002/voice", {
+            await fetch("http://localhost:3002/voice", {
                 method: "POST",
                 headers: {
                     ...form.getHeaders(),
@@ -110,12 +114,15 @@ class AppUserService extends UserService {
             .then(data => voice.calculatedRisk = data.calculatedRisk)
             .catch(error => console.error("Error:", error));
 
-            await AppUserModel.submitVoice(uid, voiceResult);
+            voice.completionDate = new Date().toISOString();
+            voiceResult = await AppUserModel.submitVoice(uid, voiceResult);
 
-            const newResults = await this.recalculateAvgRisk(uid);
-            // If this does not return null
-            if (await this.updateUserResults(uid, newResults)) return voiceResult;
-            else return null;
+            if (voiceResult) {
+                const newResults = await this.recalculateAvgRisk(uid);
+                // If this does not return null
+                if (await this.updateUserResults(uid, newResults)) return voiceResult;
+                else return null;
+            } else return null;
         }
         catch (e) {
             return null;

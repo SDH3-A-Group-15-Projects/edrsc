@@ -66,6 +66,9 @@ class WebUserModel extends UserModel {
     });
   }
 
+  /**
+   * @todo: IDs fetchable by firebase aren't going to be the same as the patient IDs, you can find a way to set them when added
+   */
   static async removePatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients/${patientUID}`);
     return patientRef.remove()
