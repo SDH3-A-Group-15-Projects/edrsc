@@ -78,6 +78,7 @@ class AppUserService extends UserService {
         .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
         .catch(error => console.error("Error:", error));
 
+        questionnaire.completionDate = new Date().toISOString();
         await AppUserModel.submitQuestionnaire(uid, questionnaire);
 
         const newResults = await this.recalculateAvgRisk(uid);
@@ -110,6 +111,7 @@ class AppUserService extends UserService {
             .then(data => voice.calculatedRisk = data.calculatedRisk)
             .catch(error => console.error("Error:", error));
 
+            voice.completionDate = new Date().toISOString();
             await AppUserModel.submitVoice(uid, voiceResult);
 
             const newResults = await this.recalculateAvgRisk(uid);

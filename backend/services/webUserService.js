@@ -30,12 +30,12 @@ class WebUserService extends UserService {
     }
 
     static async getPatients(uid) {
-        let patients = [];
+        const patients = [];
         const patientUIDs = await WebUserModel.getPatients(uid);
         if (patientUIDs){
             for (p of patientUIDs) {
-                let patient = await AppUserModel.getUserProfile(uid);
-                let patientSummary = {
+                const patient = await AppUserModel.getUserProfile(uid);
+                const patientSummary = {
                     firstName: patient.profile.firstName,
                     lastName: patient.profile.lastName,
                     dateOfBirth: patient.profile.dateOfBirth,
@@ -43,7 +43,7 @@ class WebUserService extends UserService {
                     questionnaireAverageRisk: patient.results.questionnaireAverageRisk,
                     voiceAverageRisk: patient.results.voiceAverageRisk, 
                 }
-                patients += patientSummary;
+                patients.push(patientSummary);
             }
         } else return null;
         return patients;
