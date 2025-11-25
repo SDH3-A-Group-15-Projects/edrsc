@@ -27,7 +27,8 @@ class AppUserController extends UserController {
             }
 
             const result = await AppUserService.submitQuestionnaire(req.user.uid, questionnaire);
-            res.status(201).json(result);
+            if (result) res.status(201).json(result);
+            else throw("No response from API")
         } catch (e) {
             console.error(e.message);
             console.trace();

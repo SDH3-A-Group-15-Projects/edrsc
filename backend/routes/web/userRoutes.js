@@ -8,7 +8,7 @@ const router = express.Router();
     NOTE
 ================================================================================================
 When using a route that Requires Authentication via Firebase include the following HTTP header:
-    "Authorization": `Bearer ${idToken}`
+    "Authorization": "Bearer idToken"
 
     Where idToken is the token returned from Firebase via the getIdToken method
 ------------------------------------------------------------------------------------------------
@@ -19,6 +19,8 @@ When using a route that expects MP3 data include the following HTTP header:
     "Content-Type": "multipart/form-data"
 ------------------------------------------------------------------------------------------------
 */
+
+// dateOfBirth fields are redundant for Doctor profiles, any value will be accepted.
 
 /**
  * Get User Profile
@@ -92,7 +94,7 @@ router.post('/:uid/profile', authenticateToken, WebUserController.createUserProf
  *      createdAt: string,
  *      updatedAt: string
  *   }
- * On Failure: 400 "Username is required."
+ * On Failure: 400 "First and Last name is required."
  * 500
  */
 router.put('/:uid/profile', authenticateToken, WebUserController.updateUserProfile);
