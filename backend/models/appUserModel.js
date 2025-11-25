@@ -8,18 +8,6 @@ class AppUserModel extends UserModel {
     return await super.createUserProfile(this._dbRef, uid, profileData);
   }
 
-  /*static async createPatientData(uid, details) {
-    try {
-      await db.ref(`${this._dbRef}/${uid}/riskfactors`).set(details.riskFactors);
-      await db.ref(`${this._dbRef}/${uid}/results`).set(details.results);
-      return true;
-    } catch (e) {
-      console.error(e);
-      console.trace();
-      return false;
-    }
-  }*/
-
   static async getUserProfile(uid) {
     let patient;
 
@@ -61,29 +49,43 @@ class AppUserModel extends UserModel {
   }
 
   static async submitQuestionnaire(uid, questionnaire) {
-    const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire`);
-    questionnaireRef.push(questionnaire)
-    .then((snapshot) => {
-      console.log("New questionnaire for user", uid, "with key:", snapshot.key);
-      console.log("Full reference:", snapshot.ref.toString());
+    try {
+      const questionnaireRefPath = db.ref(`${this._dbRef}/${uid}/results/questionnaire`);
+      const questionnaireRef = questionnaireRefPath.push();
+      questionnaire.id = questionnaireRef.key;
+
+      if (!questionnaire.id) {
+        console.error("Failed to generate key for questionnaire.");
+        return null;
+      }
+      
+      await questionnaireRef.set(questionnaire);
+
       return questionnaire;
-    })
-    .catch((error) => {
-      console.error("Error adding questionnaire entry:", error);
-    });
+    } catch (e) {
+      console.error("Error adding questionnaire to database:", e.message);
+      return null;
+    }
   }
 
   static async submitVoice(uid, voice) {
-    const voiceRef = db.ref(`${this._dbRef}/${uid}/results/voice`);
-    voiceRef.push(voice)
-    .then((snapshot) => {
-      console.log("New voice for user", uid, "with key:", snapshot.key);
-      console.log("Full reference:", snapshot.ref.toString());
+    try {
+      const voiceRefPath = db.ref(`${this._dbRef}/${uid}/results/voice`);
+      const voiceRef = voiceRefPath.push();
+      voice.id = voiceRef.key;
+
+      if (!questionnaire.id) {
+        console.error("Failed to generate key for voice results.");
+        return null;
+      }
+
+      await voiceRef.set(voice);
+
       return voice;
-    })
-    .catch((error) => {
-      console.error("Error adding voice entry:", error);
-    });
+    } catch (e) {
+      console.error("Error adding voice to database:", e.message);
+      return null;
+    }
   }
 
   static async submitRiskFactors(uid, riskFactors) {
