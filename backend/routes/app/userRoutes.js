@@ -186,4 +186,8 @@ router.post('/:uid/results/voice', authenticateToken, handleAudioUpload, AppUser
  */
 router.post('/:uid/results/riskfactors', authenticateToken, AppUserController.submitRiskFactors);
 
+/**
+ * @todo: add submit ratings route
+ */
+
 export default router;

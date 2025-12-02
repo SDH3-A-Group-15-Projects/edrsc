@@ -225,4 +225,8 @@ router.delete('/:uid/patients/:patientuid', authenticateToken, WebUserController
  */
 router.get('/:uid/patients/report/:patientuid', authenticateToken, WebUserController.generateReport);
 
+/**
+ * @todo: Add get all unregistered patients route
+ */
+
 export default router;
