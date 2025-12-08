@@ -3,7 +3,7 @@ import {Link, useLocation} from "react-router-dom"
 import { useEffect, useState } from 'react'
 
 import { collection, getDocs} from "firebase/firestore"
-import { db } from "../../index"
+import { auth, db } from "../../index"
 import dementia_logo from '../Assets/dementia logo.png'
 
 const Patient_selection = () => {
@@ -16,16 +16,26 @@ const Patient_selection = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const querySnapshot = await getDocs(collection(db, "patients"));
-                const patientList = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setPatients(patientList);
-            } catch (err) {
+                const user = auth.currentUser;
+                if (!user) throw new Error("User not logged in");
+                const token = await user.getIdToken();
+
+                const response = await fetch("http://localhost:5000/app/patients", {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch patients");
+
+                const data = await response.json();
+                setPatients(data);
+                }
+             catch (err) {
                 console.error("Error fetching patients:", err);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         };
 

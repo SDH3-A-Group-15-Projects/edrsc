@@ -23,10 +23,32 @@ const SignUp = () => {
       return;
     }
     try {
-      await registerNewUser(email, password);
-      navigate('/patients', { state: {lastName}});
+      const userCredential = await registerNewUser(email, password);
+      const user = userCredential.user;
+
+      const token = await user.getIdToken();
+
+      const response = await fetch("http://localhost:5000/web/profile", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create user profile');
+      }
+
+      navigate('/patients', { state: { lastName } });
     } catch (err) {
-      console.error(err);
+      console.error("Signup error:", err);
+      alert("Sign-up failed. Check console for details.");
     }
   };
   

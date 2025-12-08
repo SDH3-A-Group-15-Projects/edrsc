@@ -20,13 +20,29 @@ const LogIn = () => {
         }
 
         try {
-            const user = await loginWithEmail(email, password);
-            alert("Login succesful!");
+            const userCredential = await loginWithEmail(email, password);
+            const user = userCredential.user;
+            
+            const token = await user.getIdToken();
 
-            const lastName = user?.lastName;
-            navigate("/patients", { state: { lastName }});
+            const response = await fetch("http://localhost:5000/web/profile", {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to load user profile");
+            }
+
+            const profile = await response.json();
+
+            navigate("/patients", { state: { lastName: profile.lastName } });
         } catch (error) {
             console.error("Login failed:", error);
+            alert("Invalid email or password.")
         }
     };
 
