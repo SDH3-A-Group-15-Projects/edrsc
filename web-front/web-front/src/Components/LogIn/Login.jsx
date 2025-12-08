@@ -20,12 +20,11 @@ const LogIn = () => {
         }
 
         try {
-            const userCredential = await loginWithEmail(email, password);
-            const user = userCredential.user;
+            const user = await loginWithEmail(email, password);
             
             const token = await user.getIdToken();
 
-            const response = await fetch("http://localhost:5000/web/profile", {
+            const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile/`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,

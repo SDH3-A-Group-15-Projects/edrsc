@@ -37,8 +37,7 @@ class WebUserController extends UserController {
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -54,8 +53,7 @@ class WebUserController extends UserController {
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -78,8 +76,7 @@ class WebUserController extends UserController {
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -96,8 +93,7 @@ class WebUserController extends UserController {
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 }

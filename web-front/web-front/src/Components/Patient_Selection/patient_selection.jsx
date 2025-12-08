@@ -20,7 +20,7 @@ const Patient_selection = () => {
                 if (!user) throw new Error("User not logged in");
                 const token = await user.getIdToken();
 
-                const response = await fetch("http://localhost:5000/app/patients", {
+                const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/patients/`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,

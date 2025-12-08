@@ -28,12 +28,11 @@ class AppUserController extends UserController {
 
             const result = await AppUserService.submitQuestionnaire(req.user.uid, questionnaire);
             if (result) res.status(201).json(result);
-            else throw("No response from API")
+            else res.status(500).send("No response from API");
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -48,12 +47,11 @@ class AppUserController extends UserController {
             }
             const result = await AppUserService.submitVoice(req.user.uid, voice);
             if (result) res.status(201).json(result);
-            else throw("No response from API");
+            else res.status(500).send("No response from API");
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -66,12 +64,12 @@ class AppUserController extends UserController {
             }
 
             const result = await AppUserService.submitRiskFactors(req.user.uid, riskFactors);
-            res.status(201).json(result);
+            if (result) res.status(201).json(result);
+            else res.status(500).send("No response from API");
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 }
