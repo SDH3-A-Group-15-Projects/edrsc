@@ -5,3 +5,5 @@ functions/
 *.log
 .firebaserc
 .github/*
+/Dementia_risk_AI/Medical_news/venv/Lib/site-packages/pydantic_core
+/Dementia_risk_AI/Medical_news/venv

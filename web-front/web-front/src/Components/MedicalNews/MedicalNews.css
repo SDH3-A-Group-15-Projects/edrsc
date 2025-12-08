@@ -28,7 +28,7 @@
 
 .header h1 {
 
-  color: #2c3e50;
+  color: #f3f3f3;
 
   font-size: 2rem;
 
@@ -288,6 +288,10 @@
 
   margin: 0 auto 20px;
 
+}
+
+.loading-container p {
+  color: white;
 }
 
 

@@ -1,39 +1,36 @@
 import './patient_selection.css'
 import {Link, useLocation} from "react-router-dom"
+import { useEffect, useState } from 'react'
 
-
+import { collection, getDocs} from "firebase/firestore"
+import { db } from "../../index"
 import dementia_logo from '../Assets/dementia logo.png'
 
 const Patient_selection = () => {
     const location = useLocation();
     const lastName = location.state?.lastName || "";
 
-    const patients = [
-        {
-            name: "Coleman, Alan",
-            dob: "09-04-1983",
-            AggregatedRisk: 0.5,
-            questionnaireAverageRisk: 0.5,
-            voiceAverageRisk: 0.5,
-            id: 1,
-        },
-        {
-            name: "Smith, Jane",
-            dob: "12-11-1978",
-            AggregatedRisk: 0.4,
-            questionnaireAverageRisk: 0.6,
-            voiceAverageRisk: 0.2,
-            id: 2,
-        },
-        {
-            name: "Brown, Michael",
-            dob: "03-23-1959",
-            AggregatedRisk: 0.7,
-            questionnaireAverageRisk: 0.6,
-            voiceAverageRisk: 0.8,
-            id: 3,
-        },
-    ];
+    const [patients, setPatients] = useState([]);
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const fetchPatients = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "patients"));
+                const patientList = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setPatients(patientList);
+            } catch (err) {
+                console.error("Error fetching patients:", err);
+            } finally {
+                setLoading(false)
+            }
+        };
+
+        fetchPatients();
+    }, []);
 
     return (
         <>

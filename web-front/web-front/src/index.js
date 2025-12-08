@@ -7,6 +7,7 @@ import {BrowserRouter} from 'react-router-dom';
 import { initializeApp} from 'firebase/app';
 import { getAnalytics} from "firebase/analytics";
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -43,3 +44,5 @@ const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 
 reportWebVitals();
+
+export const db = getFirestore(app);
