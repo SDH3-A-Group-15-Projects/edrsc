@@ -1,4 +1,5 @@
 import UserModel from './userModel.js';
+import { db } from '../utils/firebaseConfig.js';
 
 class AppUserModel extends UserModel {
   static _dbRef = "app/users";
@@ -8,7 +9,19 @@ class AppUserModel extends UserModel {
   }
 
   static async getUserProfile(uid) {
-    return await super.getUserProfile(this._dbRef, uid);
+    let patient;
+
+    patient.profile = await super.getUserProfile(this._dbRef, uid);
+
+    const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+    if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+    else patient.riskFactors = null;
+
+    const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+    if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+    else patient.results = null;
+
+    return patient;
   }
 
   static async updateUserProfile(uid, profileDataUpdate) {
@@ -16,7 +29,71 @@ class AppUserModel extends UserModel {
   }
 
   static async deleteUserProfile(uid) {
-    return await super.deleteUserProfile(this._dbRef, uid);
+    try {
+      await db.ref(`${this._dbRef}/${uid}/riskfactors`).remove();
+      await db.ref(`${this._dbRef}/${uid}/results`).remove();
+      return await super.deleteUserProfile(this._dbRef, uid);
+    } catch (e) {
+      console.error(e);
+      console.trace();
+      return false;
+    }
+  }
+
+  static async updateUserResults(uid, results) {
+    const userResultsRef = db.ref(`${this._dbRef}/${uid}`);
+    await userResultsRef.update(results);
+    const snapshot = await userResultsRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
+  }
+
+  static async submitQuestionnaire(uid, questionnaire) {
+    try {
+      const questionnaireRefPath = db.ref(`${this._dbRef}/${uid}/results/questionnaire`);
+      const questionnaireRef = questionnaireRefPath.push();
+      questionnaire.id = questionnaireRef.key;
+
+      if (!questionnaire.id) {
+        console.error("Failed to generate key for questionnaire.");
+        return null;
+      }
+      
+      await questionnaireRef.set(questionnaire);
+
+      return questionnaire;
+    } catch (e) {
+      console.error("Error adding questionnaire to database:", e.message);
+      return null;
+    }
+  }
+
+  static async submitVoice(uid, voice) {
+    try {
+      const voiceRefPath = db.ref(`${this._dbRef}/${uid}/results/voice`);
+      const voiceRef = voiceRefPath.push();
+      voice.id = voiceRef.key;
+
+      if (!questionnaire.id) {
+        console.error("Failed to generate key for voice results.");
+        return null;
+      }
+
+      await voiceRef.set(voice);
+
+      return voice;
+    } catch (e) {
+      console.error("Error adding voice to database:", e.message);
+      return null;
+    }
+  }
+
+  static async submitRiskFactors(uid, riskFactors) {
+    const riskFactorsRef = db.ref(`${this._dbRef}/${uid}/riskfactors`);
+    await riskFactorsRef.set(riskFactors);
+    const snapshot = await riskFactorsRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
   }
 }
 
