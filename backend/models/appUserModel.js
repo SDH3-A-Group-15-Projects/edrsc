@@ -9,19 +9,25 @@ class AppUserModel extends UserModel {
   }
 
   static async getUserProfile(uid) {
-    let patient;
+    try {
+      let patient = {};
+      const profileDataFromSuper = await super.getUserProfile(this._dbRef, uid);
+      patient.profile = profileDataFromSuper;
 
-    patient.profile = await super.getUserProfile(this._dbRef, uid);
+      const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+      if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+      else patient.riskFactors = null;
 
-    const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
-    if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
-    else patient.riskFactors = null;
+      const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+      if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+      else patient.results = null;
 
-    const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
-    if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
-    else patient.results = null;
-
-    return patient;
+      return patient;
+    } catch (e) {
+      console.error("Error getting patient profile:", e);
+      console.trace();
+      return null;
+    }
   }
 
   static async updateUserProfile(uid, profileDataUpdate) {

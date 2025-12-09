@@ -1,4 +1,5 @@
 import UserModel from './userModel.js';
+import { db } from '../utils/firebaseConfig.js';
 
 class WebUserModel extends UserModel {
   static _dbRef = "web/users";
@@ -53,17 +54,24 @@ class WebUserModel extends UserModel {
   }
 
   static async getPatients(uid) {
-    const patientRef = db.ref(`${this._dbRef}/${uid}/patients`);
-    patientRef.once('value').then((snapshot) => {
-        const patientsObject = snapshot.val();
-        if (patientsObject) {
-          const patientsArray = Object.keys(patientsObject).map(key => {return {...patientsObject[key]}});
-          return patientsArray;
-        } else return null;
-    })
-    .catch((e) => {
+    try {
+      const patientRef = db.ref(`${this._dbRef}/${uid}/patients`); 
+      const snapshot = await patientRef.once('value');
+      const patients = snapshot.val();
+
+      if (patients) {
+        const patientsArray = Object.keys(patients);
+        /*.map(key => {
+          return { ...patients[key] };
+        });*/
+        return patientsArray;
+      } else {
+        return null;
+      }
+    } catch (e) {
       console.error("Error getting patients:", e);
-    });
+      throw e;
+    }
   }
 
   /**

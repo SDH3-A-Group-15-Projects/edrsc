@@ -30,23 +30,31 @@ class WebUserService extends UserService {
     }
 
     static async getPatients(uid) {
-        const patients = [];
-        const patientUIDs = await WebUserModel.getPatients(uid);
-        if (patientUIDs){
-            for (p of patientUIDs) {
-                const patient = await AppUserModel.getUserProfile(uid);
-                const patientSummary = {
-                    firstName: patient.profile.firstName,
-                    lastName: patient.profile.lastName,
-                    dateOfBirth: patient.profile.dateOfBirth,
-                    averageRisk: patient.results.averageRisk,
-                    questionnaireAverageRisk: patient.results.questionnaireAverageRisk,
-                    voiceAverageRisk: patient.results.voiceAverageRisk, 
+        try {
+            const patients = [];
+            const patientUIDs = await WebUserModel.getPatients(uid);
+            console.log("Patient UIDs:", patientUIDs);
+            if (patientUIDs && patientUIDs.length > 0) {
+                for (const p of patientUIDs) {
+                    const patient = await AppUserModel.getUserProfile(p);
+                    if (!patient || !patient.profile) continue;
+                    const patientSummary = {
+                        firstName: patient.profile.firstName,
+                        lastName: patient.profile.lastName,
+                        dateOfBirth: patient.profile.dateOfBirth,
+                        averageRisk: patient.results ? patient.results.averageRisk || null : null,
+                        questionnaireAverageRisk: patient.results ? patient.results.questionnaireAverageRisk || null : null,
+                        voiceAverageRisk: patient.results ? patient.results.voiceAverageRisk || null : null, 
+                    }
+                    patients.push(patientSummary);
                 }
-                patients.push(patientSummary);
-            }
-        } else return null;
-        return patients;
+            } else return null;
+            return patients;
+        } catch (e) {
+            console.trace();
+            console.error(e.message);
+            throw e;
+        }
     }
 
     static async removePatient(uid, patientUID) {
@@ -55,7 +63,7 @@ class WebUserService extends UserService {
 
     static async generateReport(patientUID) {
         const patient = await AppUserModel.getUserProfile(patientUID);
-        if (patient) {
+        if (patient && patient.profile) {
             return {
                 profile: {
                     firstName: patient.profile.firstName,

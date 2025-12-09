@@ -6,6 +6,17 @@ import { collection, getDocs} from "firebase/firestore"
 import { auth, db } from "../../index"
 import dementia_logo from '../Assets/dementia logo.png'
 
+const validatePatient = (data) => {
+    return {
+        firstName: (data.firstName && data.firstName !== "") ? data.firstName : "N",
+        lastName: (data.lastName && data.lastName !== "") ? data.lastName : "/ A",
+        dateOfBirth: (data.dateOfBirth && data.dateOfBirth !== "") ? data.dateOfBirth : "N/A",
+        averageRisk: (data.averageRisk != null && !isNaN(data.averageRisk)) ? data.averageRisk : 0,
+        questionnaireAverageRisk: (data.questionnaireAverageRisk != null && !isNaN(data.questionnaireAverageRisk)) ? data.questionnaireAverageRisk : 0,
+        voiceAverageRisk: (data.voiceAverageRisk != null && !isNaN(data.voiceAverageRisk)) ? data.voiceAverageRisk : 0,
+    };
+};
+
 const Patient_selection = () => {
     const location = useLocation();
     const lastName = location.state?.lastName || "";
@@ -30,7 +41,8 @@ const Patient_selection = () => {
                 if (!response.ok) throw new Error("Failed to fetch patients");
 
                 const data = await response.json();
-                setPatients(data);
+                const cleanData = (data || []).map(validatePatient);
+                setPatients(cleanData);
                 }
              catch (err) {
                 console.error("Error fetching patients:", err);
@@ -72,9 +84,9 @@ const Patient_selection = () => {
                         {patients.map((patient) => (
                             <tr key ={patient.id}>
                                 <td><input type="checkbox"/></td>
-                                <td>{patient.name}</td>
-                                <td>{patient.dob}</td>
-                                <td>{patient.AggregatedRisk*100}%</td>
+                                <td>{`${patient.firstName} ${patient.lastName}`}</td>
+                                <td>{patient.dateOfBirth}</td>
+                                <td>{patient.averageRisk*100}%</td>
                                 <td>{patient.questionnaireAverageRisk*100}%</td>
                                 <td>{patient.voiceAverageRisk*100}%</td>
                             </tr>
