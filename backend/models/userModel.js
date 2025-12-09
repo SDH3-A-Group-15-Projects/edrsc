@@ -17,6 +17,27 @@ class UserModel {
     else return null;
   }
 
+  static async getAllUserProfiles(dbRef) {
+    const allUsersRef = db.ref(dbRef);
+    const snapshot = await allUsersRef.once('value');
+
+    if (!snapshot.exists()) return [];
+
+    const allUsersData = snapshot.val();
+    const profiles = [];
+
+    for (const uid in allUsersData) {
+      if (allUsersData.hasOwnProperty(uid)) {
+        const userData = allUsersData[uid];
+        if (userData && userData.profile) {
+          profiles.push({ uid: uid, profile: userData.profile });
+        }
+      }
+    }
+
+    return profiles;
+  }
+
   static async updateUserProfile(dbRef, uid, profileDataUpdate) {
     const userProfileRef = db.ref(`${dbRef}/${uid}/profile`);
     const oldSnapshot = await userProfileRef.once('value');

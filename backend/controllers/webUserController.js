@@ -31,8 +31,7 @@ class WebUserController extends UserController {
             const addedUID = await WebUserService.addPatient(uid, patientUID);
             if (addedUID) return res.status(201).send(`Added patient with UID ${addedUID}`);
             else {
-                res.status(404);
-                throw("No patient found with UID", patientUID);
+                res.status(404).send("No patient found with UID " + patientUID);
             }
         } catch (e) {
             console.error(e.message);
@@ -47,8 +46,22 @@ class WebUserController extends UserController {
             const patients = await WebUserService.getPatients(uid);
             if (patients) return res.status(201).json(patients);
             else {
-                res.status(404);
-                throw("Patients not found");
+                res.status(404).send("Patients not found");
+            }
+        } catch (e) {
+            console.error(e.message);
+            console.trace();
+            res.status(500).send("No response from API");
+        }
+    }
+
+    static async getAllUnregisteredPatients(req, res) {
+        try {
+            const uid = req.user.uid;
+            const patients = await WebUserService.getAllUnregisteredPatients(uid);
+            if (patients) return res.status(201).json(patients);
+            else {
+                res.status(404).send("Patients not found");
             }
         } catch (e) {
             console.error(e.message);
@@ -70,8 +83,7 @@ class WebUserController extends UserController {
             const deletedUID = await WebUserService.removePatient(uid, patientUID);
             if (deletedUID) return res.status(201).send(`Removed patient with UID ${removedUID}`);
             else {
-                res.status(404);
-                throw("No patient found with UID", patientUID);
+                res.status(404).send("No patient found with UID " + patientUID);
             }
         } catch (e) {
             console.error(e.message);
@@ -87,8 +99,7 @@ class WebUserController extends UserController {
             const report = await WebUserService.generateReport(patientUID);
             if (report) return res.status(201).json(report);
             else {
-                res.status(404);
-                throw("No patient found with UID", patientUID);
+                res.status(404).send("No patient found with UID " + patientUID);
             }
         } catch (e) {
             console.error(e.message);

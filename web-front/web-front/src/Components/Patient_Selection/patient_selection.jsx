@@ -1,5 +1,5 @@
 import './patient_selection.css'
-import {Link, useLocation} from "react-router-dom"
+import {Link, useLocation, useNavigate} from "react-router-dom"
 import { useEffect, useState } from 'react'
 
 import { collection, getDocs} from "firebase/firestore"
@@ -8,6 +8,8 @@ import dementia_logo from '../Assets/dementia logo.png'
 
 const validatePatient = (data) => {
     return {
+        uid: data.uid,
+        checked: false,     // Track if checked in UI
         firstName: (data.firstName && data.firstName !== "") ? data.firstName : "N",
         lastName: (data.lastName && data.lastName !== "") ? data.lastName : "/ A",
         dateOfBirth: (data.dateOfBirth && data.dateOfBirth !== "") ? data.dateOfBirth : "N/A",
@@ -19,10 +21,58 @@ const validatePatient = (data) => {
 
 const Patient_selection = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const lastName = location.state?.lastName || "";
 
     const [patients, setPatients] = useState([]);
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
+
+    const registerPatients = async () => {
+        const selectedPatients = patients.filter(patient => patient.checked);
+
+        try {
+            for (const patient of selectedPatients) {
+                await registerPatient(patient.uid);
+            }
+            navigate("/welcome", { state: { lastName } });
+        } catch (error) {
+            console.error("Error registering patients:", error);
+            alert("Failed to register selected patients. Please try again.");
+            return;
+        }
+    };
+
+    const registerPatient = async (uid) => {
+        const user = auth.currentUser;
+        if (!user) throw new Error("User not logged in");
+        const token = await user.getIdToken();
+
+        try {
+            const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/patients/${uid}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to register patient with UID " + uid);
+            }
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const handleCheckboxChange = (uid) => {
+        setPatients(prevPatients =>
+            prevPatients.map(patient =>
+                patient.uid === uid
+                    ? { ...patient, checked: !patient.checked }
+                    : patient
+            )
+    );
+    };
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -31,7 +81,7 @@ const Patient_selection = () => {
                 if (!user) throw new Error("User not logged in");
                 const token = await user.getIdToken();
 
-                const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/patients/`, {
+                const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/unregistered/`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -82,8 +132,8 @@ const Patient_selection = () => {
                     </thead>
                     <tbody>
                         {patients.map((patient) => (
-                            <tr key ={patient.id}>
-                                <td><input type="checkbox"/></td>
+                            <tr key ={patient.uid}>
+                                <td><input type="checkbox" checked={patient.checked} onChange={() => handleCheckboxChange(patient.uid)} /></td>
                                 <td>{`${patient.firstName} ${patient.lastName}`}</td>
                                 <td>{patient.dateOfBirth}</td>
                                 <td>{patient.averageRisk*100}%</td>
@@ -93,10 +143,10 @@ const Patient_selection = () => {
                         ))}   
                     </tbody>
                 </table>
-                        </div>
+                </div>
 
                 <div className="ps-submit-container">
-                    <button className="ps-add-btn"> Add Patients</button>
+                    <button className="ps-add-btn" onClick={() => registerPatients()}> Add Patients</button>
                     <Link to="/welcome" className="dash-link">Go to Dashboard</Link>
                 </div>
         </div>

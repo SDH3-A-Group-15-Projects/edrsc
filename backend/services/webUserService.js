@@ -33,7 +33,6 @@ class WebUserService extends UserService {
         try {
             const patients = [];
             const patientUIDs = await WebUserModel.getPatients(uid);
-            console.log("Patient UIDs:", patientUIDs);
             if (patientUIDs && patientUIDs.length > 0) {
                 for (const p of patientUIDs) {
                     const patient = await AppUserModel.getUserProfile(p);
@@ -50,6 +49,44 @@ class WebUserService extends UserService {
                 }
             } else return null;
             return patients;
+        } catch (e) {
+            console.trace();
+            console.error(e.message);
+            throw e;
+        }
+    }
+
+    static async getAllUnregisteredPatients(uid) {
+        try {
+            let patients = await AppUserModel.getAllUserProfiles();
+            if (!patients || patients.length === 0) return null;
+            const patientUIDs = await WebUserModel.getPatients(uid);
+
+            // Filter out patients in the doctor's patient list
+            if (patientUIDs && patientUIDs.length > 0) {
+                patients = patients.filter(p => !patientUIDs.includes(p.uid));
+            }
+
+            // Get summaries for remaining patients
+            const patientSummaries = [];
+            if (patients && patients.length > 0) {
+                for (const patient of patients) {
+                    if (!patient.profile) continue;
+                    const patientSummary = {
+                        uid: patient.uid,
+                        firstName: patient.profile.firstName,
+                        lastName: patient.profile.lastName,
+                        dateOfBirth: patient.profile.dateOfBirth,
+                        averageRisk: patient.results ? patient.results.averageRisk || null : null,
+                        questionnaireAverageRisk: patient.results ? patient.results.questionnaireAverageRisk || null : null,
+                        voiceAverageRisk: patient.results ? patient.results.voiceAverageRisk || null : null, 
+                    }
+                    patientSummaries.push(patientSummary);
+                }
+            } else return null;
+
+            if (patientSummaries.length === 0) return null;
+            return patientSummaries;
         } catch (e) {
             console.trace();
             console.error(e.message);

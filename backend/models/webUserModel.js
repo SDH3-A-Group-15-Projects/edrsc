@@ -41,16 +41,12 @@ class WebUserModel extends UserModel {
 
   static async addPatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients`);
-    questionnaireRef.push({uid: patientUID})
-    .then((snapshot) => {
-      console.log("New patient with UID", patientUID, "for user", uid, "with key:", snapshot.key);
-      console.log("Full reference:", snapshot.ref.toString());
-      return patientUID;
-    })
+    patientRef.child(patientUID).set(true)
     .catch((error) => {
       console.error("Error adding patient:", error);
       return null;
     });
+    return patientUID;
   }
 
   static async getPatients(uid) {
@@ -74,9 +70,6 @@ class WebUserModel extends UserModel {
     }
   }
 
-  /**
-   * @todo: IDs fetchable by firebase aren't going to be the same as the patient IDs, you can find a way to set them when added
-   */
   static async removePatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients/${patientUID}`);
     return patientRef.remove()

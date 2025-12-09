@@ -30,6 +30,32 @@ class AppUserModel extends UserModel {
     }
   }
 
+  static async getAllUserProfiles() {
+    try {
+      const profilesFromSuper = await super.getAllUserProfiles(this._dbRef);
+      if (profilesFromSuper.length === 0) return [];
+      else {
+        for (const patient of profilesFromSuper) {
+          const uid = patient.uid;
+
+          const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+          if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+          else patient.riskFactors = null;
+
+          const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+          if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+          else patient.results = null;
+        }
+      }
+
+      return profilesFromSuper;
+    } catch (e) {
+      console.error("Error getting patient profile:", e);
+      console.trace();
+      return null;
+    }
+  }
+
   static async updateUserProfile(uid, profileDataUpdate) {
     return await super.updateUserProfile(this._dbRef, uid, profileDataUpdate);
   }
