@@ -7,6 +7,7 @@ import password_icon from '../Assets/password icon.png'
 import dementia_logo from '../Assets/dementia logo.png'
 import { Await, Link, useNavigate } from 'react-router-dom';
 import { registerNewUser } from '../../utils/createAccountWithEmail'
+import { updateProfile } from "firebase/auth";
 
 
 const SignUp = () => {
@@ -24,6 +25,8 @@ const SignUp = () => {
     }
     try {
       const user = await registerNewUser(email, password);
+
+      await updateProfile(user, { displayName: `${lastName}` });
 
       const token = await user.getIdToken();
 

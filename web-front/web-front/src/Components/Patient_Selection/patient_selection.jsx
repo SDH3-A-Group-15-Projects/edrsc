@@ -22,7 +22,8 @@ const validatePatient = (data) => {
 const Patient_selection = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const lastName = location.state?.lastName || "";
+    const user = auth.currentUser;
+    const lastName = user.displayName || "";
 
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ const Patient_selection = () => {
             for (const patient of selectedPatients) {
                 await registerPatient(patient.uid);
             }
-            navigate("/welcome", { state: { lastName: lastName } });
+            navigate("/welcome");
         } catch (error) {
             console.error("Error registering patients:", error);
             alert("Failed to register selected patients. Please try again.");
@@ -43,7 +44,6 @@ const Patient_selection = () => {
     };
 
     const registerPatient = async (uid) => {
-        const user = auth.currentUser;
         if (!user) throw new Error("User not logged in");
         const token = await user.getIdToken();
 
@@ -77,8 +77,6 @@ const Patient_selection = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const user = auth.currentUser;
-                if (!user) throw new Error("User not logged in");
                 const token = await user.getIdToken();
 
                 const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/unregistered/`, {

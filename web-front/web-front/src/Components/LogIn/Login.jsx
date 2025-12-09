@@ -6,6 +6,7 @@ import password_icon from '../Assets/password icon.png'
 import dementia_logo from '../Assets/dementia logo.png'
 import { Link, useNavigate } from 'react-router-dom';
 import { loginWithEmail } from "../../utils/logInWithEmail";
+import { updateProfile } from "firebase/auth";
 
 const LogIn = () => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const LogIn = () => {
 
             const profile = await response.json();
 
-            navigate("/patients", { state: { lastName: profile.lastName } });
+            navigate("/patients");
         } catch (error) {
             console.error("Login failed:", error);
             alert("Invalid email or password.")

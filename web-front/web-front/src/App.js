@@ -9,12 +9,21 @@ import MedicalNews from './Components/MedicalNews/MedicalNews';
 import ResetPassword from './Components/ResetPassword/resetPassword';
 import DataAggregation from './Components/DataAggregation/DataAggregation';
 import ProtectedRoute from './Components/ProtectedRoute';
+import UnprotectedRoute from './Components/UnprotectedRoute';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<SignUp />} />
-      <Route path="/login" element={<LogIn />} />
+      <Route path="/" element={
+        <UnprotectedRoute>
+        <SignUp />
+        </UnprotectedRoute>
+        } />
+      <Route path="/login" element={
+        <UnprotectedRoute>
+        <LogIn />
+        </UnprotectedRoute>
+      } />
       <Route path="/welcome" element={
         <ProtectedRoute>
         <Welcome />

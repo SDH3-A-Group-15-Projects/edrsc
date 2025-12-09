@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import dementia_logo from '../Assets/dementia logo.png'
 import './Welcome.css'
 import { useEffect, useState } from 'react'
@@ -8,7 +8,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const Welcome = () => {
     const location = useLocation();
-    const lastName = location.state?.lastName || "";
+    const user = auth.currentUser;
+    const lastName = user?.displayName || "";
 
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,8 +29,7 @@ const Welcome = () => {
 
     useEffect(() => {
         const fetchPatients = async () => {
-            try {
-                const user = auth.currentUser;
+            try {      
                 if (!user) throw new Error("User not logged in");
                 const token = await user.getIdToken();
 
