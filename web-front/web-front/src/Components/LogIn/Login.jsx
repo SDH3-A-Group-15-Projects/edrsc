@@ -59,7 +59,7 @@ const LogIn = () => {
                 <div className="text">Log In</div>
                 <div className="underline"></div>
                 <div className='signUpLink'>
-                Need an Account? <Link to="/signup">Sign up</Link>
+                Need an Account? <Link to="/">Sign up</Link>
                 </div>
             </div>
             <div className="inputs">

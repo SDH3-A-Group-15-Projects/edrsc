@@ -8,19 +8,45 @@ import Report from './Components/Report/report';
 import MedicalNews from './Components/MedicalNews/MedicalNews';
 import ResetPassword from './Components/ResetPassword/resetPassword';
 import DataAggregation from './Components/DataAggregation/DataAggregation';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 function App() {
   return (
     <Routes>
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/" element={<SignUp />} />
       <Route path="/login" element={<LogIn />} />
-      <Route path="/welcome" element={<Welcome />} />
-      <Route path="/dashboard" element={<Risk_Dashboard />} />
-      <Route path="/patients" element={<Patient_Selection/>}/>
-      <Route path="/report" element={<Report/>}/>
-      <Route path="/news" element={<MedicalNews/>}/>
+      <Route path="/welcome" element={
+        <ProtectedRoute>
+        <Welcome />
+        </ProtectedRoute>
+      }/>
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+        <Risk_Dashboard />
+        </ProtectedRoute>
+        } 
+        />
+      <Route path="/patients" element={
+        <ProtectedRoute>
+        <Patient_Selection/>
+        </ProtectedRoute>
+        }/>
+      <Route path="/report" element={
+        <ProtectedRoute>
+        <Report/>
+        </ProtectedRoute>
+        }/>
+      <Route path="/news" element={
+        <ProtectedRoute>
+        <MedicalNews/>
+        </ProtectedRoute>
+        }/>
       <Route path="/reset" element={<ResetPassword/>}/>
-      <Route path='/data' element={<DataAggregation/>}/>
+      <Route path='/data' element={
+        <ProtectedRoute>
+        <DataAggregation/>
+        </ProtectedRoute>
+        }/>
     </Routes>
   );
 }
