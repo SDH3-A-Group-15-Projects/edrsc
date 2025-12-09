@@ -6,8 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
 import { initializeApp} from 'firebase/app';
 import { getAnalytics} from "firebase/analytics";
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -42,6 +43,15 @@ const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app);
 
 export const auth = getAuth(app);
+
+setPersistence(auth, browserLocalPersistence)
+onAuthStateChanged(auth, (user) => { 
+  if (user) {
+    console.log("User is logged in:", user);
+} else {
+    console.log("user is not logged in.");
+}
+});
 
 reportWebVitals();
 
