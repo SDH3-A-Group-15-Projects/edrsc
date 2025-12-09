@@ -34,7 +34,7 @@ const Patient_selection = () => {
             for (const patient of selectedPatients) {
                 await registerPatient(patient.uid);
             }
-            navigate("/welcome", { state: { lastName } });
+            navigate("/welcome", { state: { lastName: lastName } });
         } catch (error) {
             console.error("Error registering patients:", error);
             alert("Failed to register selected patients. Please try again.");
