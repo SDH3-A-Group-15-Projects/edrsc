@@ -76,7 +76,10 @@ const Welcome = () => {
                 </tbody>
             </table>
         </div>
-
+        <div className="welcome-buttons">
+            <Link to="/news" className="welcome-btn">News</Link>
+            <Link to="/data" className="welcome-btn">Data Aggregation</Link>
+        </div>
     </div>
     </>
     );
