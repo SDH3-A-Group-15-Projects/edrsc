@@ -86,10 +86,17 @@ const Patient_selection = () => {
                         "Content-Type": "application/json",
                     },
                 });
-                if (!response.ok) throw new Error("Failed to fetch patients");
+                if (response.status === 404) {
+                    navigate("/welcome");
+                    return;
+                } else if (!response.ok) throw new Error("Failed to fetch patients");
 
                 const data = await response.json();
                 const cleanData = (data || []).map(validatePatient);
+                if (cleanData.length === 0) {
+                    navigate("/welcome");
+                    return;
+                }
                 setPatients(cleanData);
                 }
              catch (err) {
