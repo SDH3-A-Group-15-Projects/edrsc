@@ -186,6 +186,8 @@ router.post('/:uid/results/voice/:id', authenticateToken, handleAudioUpload, App
  */
 router.post('/:uid/results/riskfactors', authenticateToken, AppUserController.submitRiskFactors);
 
+router.post('/:uid/rating/', authenticateToken, AppUserController.submitAppRating);
+
 /**
  * Submit Form Data
  * 

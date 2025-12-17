@@ -74,7 +74,18 @@ class AppUserController extends UserController {
         }
     }
 
-    
+    static async submitAppRating(req, res) {
+        try {
+            const { rating, review } = req.body;
+            const result = await AppUserService.submitAppRating(req.user.uid, rating, review);
+            if (result) res.status(201).json(result);
+            else res.status(500).send("No response from API");
+        } catch (e) {
+            console.error(e.message);
+            console.trace();
+            res.status(500).send("No response from API");
+        }
+    }
 }
 
 export default AppUserController;

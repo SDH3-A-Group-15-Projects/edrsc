@@ -139,6 +139,34 @@ class AppUserModel extends UserModel {
     if (snapshot.exists()) return snapshot.val();
     else return null;
   }
+
+  static async submitAppRating(uid, rating, review) {
+    const ratingRef = db.ref(`${this._dbRef}/${uid}/rating`);
+    await ratingRef.set({ rating, review });
+    const snapshot = await ratingRef.once('value');
+    if (snapshot.exists()) return snapshot.val();
+    else return null;
+  }
+
+  static async getAllRatings() {
+    const allUsersRef = db.ref(this._dbRef);
+    const snapshot = await allUsersRef.once('value');
+
+    if (!snapshot.exists()) return [];
+    const allUsersData = snapshot.val();
+    const profiles = [];
+
+    for (const uid in allUsersData) {
+      if (allUsersData.hasOwnProperty(uid)) {
+        const userData = allUsersData[uid];
+        if (userData && userData.rating) {
+          profiles.push({ uid: uid, rating: userData.rating.rating, review: userData.rating.review });
+        }
+      }
+    }
+
+    return profiles;
+  }
 }
 
 export default AppUserModel;
