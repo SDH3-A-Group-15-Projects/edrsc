@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3cfd9f1-2559-4020-9d90-6d59b97fc6eb" name="Changes" comment="" />
+    <list default="true" id="d3cfd9f1-2559-4020-9d90-6d59b97fc6eb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Medical_news/Backend.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,6 +21,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -27,12 +34,14 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Python.Backend.executor&quot;: &quot;Run&quot;,
     &quot;Python.Converting_data.executor&quot;: &quot;Run&quot;,
     &quot;Python.Main.executor&quot;: &quot;Run&quot;,
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
     &quot;Python.train_model.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/fizak/dementia_AI/Dementia_risk_AI/Model/data&quot;
+    &quot;git-widget-placeholder&quot;: &quot;AI&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/fizak/edrsc/Dementia_risk_AI&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -41,16 +50,16 @@
       <recent name="C:\Users\fizak\dementia_AI\Dementia_risk_AI\Data" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\scott\Documents\College\Year 3\Group Project\edrsc\edrsc-AI\Dementia_risk_AI\Medical_news" />
+      <recent name="C:\Users\scott\Documents\College\Year 3\Group Project\edrsc\edrsc-AI\Dementia_risk_AI" />
       <recent name="C:\Users\fizak\dementia_AI\Dementia_risk_AI" />
       <recent name="C:\Users\fizak\dementia_AI\Dementia_risk_AI\Model" />
       <recent name="C:\Users\fizak\dementia_AI\Dementia_risk_AI\Model\model" />
-      <recent name="C:\Users\fizak\dementia_AI\Dementia_risk_AI\utils" />
     </key>
   </component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Dementia_risk_AI" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -93,5 +102,16 @@
       <updated>1759493929745</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

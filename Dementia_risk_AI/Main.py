@@ -7,7 +7,7 @@ from utils.features_extraction import extract_speech_features
 # Load Whisper model (you can use 'tiny', 'base', 'small', 'medium', 'large')
 print("Loading Whisper model..")
 
-whisper_model = whisper.load_model("medium")  #small or medium model for accuracy
+whisper_model = whisper.load_model("small")  #medium -> leads to timeouts
 
 # Load risk prediction model and scaler
 model = joblib.load("Model/model/risk_model.pkl")
