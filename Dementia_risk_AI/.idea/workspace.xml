@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d3cfd9f1-2559-4020-9d90-6d59b97fc6eb" name="Changes" comment="" />
+    <list default="true" id="d3cfd9f1-2559-4020-9d90-6d59b97fc6eb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Dementia_risk_AI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Dementia_risk_AI.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/src/Components/MedicalNews/MedicalNews.css" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/src/Components/MedicalNews/MedicalNews.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/src/Components/Patient_Selection/patient_selection.css" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/src/Components/Patient_Selection/patient_selection.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/src/Components/Patient_Selection/patient_selection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/src/Components/Patient_Selection/patient_selection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/src/Services/newsApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/src/Services/newsApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-front/web-front/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../web-front/web-front/src/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,6 +29,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -27,12 +42,24 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.Backend.executor&quot;: &quot;Run&quot;,
     &quot;Python.Converting_data.executor&quot;: &quot;Run&quot;,
     &quot;Python.Main.executor&quot;: &quot;Run&quot;,
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
     &quot;Python.train_model.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/fizak/dementia_AI/Dementia_risk_AI/Model/data&quot;
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;frontend&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/fizak/edrsc/Dementia_risk_AI&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -57,10 +84,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.11 (data_analytics_lab)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/api" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/api/app.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -79,7 +108,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-abccbe9d933a-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.20224.428" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-PY-252.25557.178" />
+        <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
   </component>
@@ -91,7 +121,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759493929745</updated>
+      <workItem from="1763545307874" duration="2496000" />
+      <workItem from="1765112589451" duration="47000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

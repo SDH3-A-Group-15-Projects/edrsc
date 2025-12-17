@@ -10,12 +10,12 @@ class UserController {
             }
 
             const newUserProfile = await Service.createUserProfile(uid, firstName, lastName, email, dateOfBirth);
-            res.status(201).json(newUserProfile);
+            if (newUserProfile) res.status(201).json(newUserProfile);
+            else res.status(500).send("No response from API");
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -38,13 +38,16 @@ class UserController {
             const uid = req.user.uid;
             const email = req.user.email;
 
+            if (!firstName || !lastName) {
+                return res.status(400).send("First and Last name is required.");
+            }
             const profileDataUpdate = await Service.updateUserProfile(uid, firstName, lastName, email, dateOfBirth);
-            res.status(200).json(profileDataUpdate);
+            if (profileDataUpdate) res.status(200).json(profileDataUpdate);
+            else res.status(500).send("User Profile update failed.");
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 
@@ -55,8 +58,7 @@ class UserController {
         } catch (e) {
             console.error(e.message);
             console.trace();
-            if (res.status) return res.status(res.status).send(e.message);
-            else return res.status(500).send(e.message);
+            res.status(500).send("No response from API");
         }
     }
 }

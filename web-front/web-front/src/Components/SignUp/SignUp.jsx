@@ -5,8 +5,10 @@ import person_icon from '../Assets/person icon.png'
 import email_icon from '../Assets/email icon.png'
 import password_icon from '../Assets/password icon.png'
 import dementia_logo from '../Assets/dementia logo.png'
-import { Await, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerNewUser } from '../../utils/createAccountWithEmail'
+import { createAccountWithGoogle } from '../../utils/createAccountWithGoogle.js';
+import { updateProfile } from "firebase/auth";
 
 
 const SignUp = () => {
@@ -17,16 +19,72 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleGoogleSignUp = async () => {
+    try {
+      const user = await createAccountWithGoogle();
+      const email = user.email;
+      const displayName = user.displayName ? user.displayName.split(' ') : ['', ''];
+      const firstName = displayName[0];
+      const lastName = displayName[1];
+      const token = await user.getIdToken();
+
+      const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create user profile');
+      }
+
+      navigate('/patients', { state: { lastName } });
+    } catch (err) {
+      console.error("Signup error:", err);
+      alert("Sign-up failed. Check console for details.");
+    }
+  };
+
   const handleSignUp = async () => {
     if (!firstName || !lastName || !email || !password) {
       alert("Please fill in all fields.");
       return;
     }
     try {
-      await registerNewUser(email, password);
-      navigate('/Welcome', { state: {lastName}});
+      const user = await registerNewUser(email, password);
+
+      await updateProfile(user, { displayName: `${lastName}` });
+
+      const token = await user.getIdToken();
+
+      const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create user profile');
+      }
+
+      navigate('/patients', { state: { lastName } });
     } catch (err) {
-      console.error(err);
+      console.error("Signup error:", err);
+      alert("Sign-up failed. Check console for details.");
     }
   };
   
@@ -66,8 +124,13 @@ const SignUp = () => {
             <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}/>
           </div>
         </div>
-
           <div className="submit" onClick={handleSignUp}>Sign Up</div>
+        </div>
+        <div>
+          <button onClick={handleGoogleSignUp} className="google-signin">
+            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" className="google-logo"/>
+            Sign in with Google
+          </button>
         </div>
     </>
   )

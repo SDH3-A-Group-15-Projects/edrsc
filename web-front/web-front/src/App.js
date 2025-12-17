@@ -4,15 +4,73 @@ import LogIn from './Components/LogIn/Login';
 import Welcome from './Components/Welcome/Welcome';
 import Risk_Dashboard from './Components/Risk_Dashboard/Risk_Dashboard';
 import Patient_Selection from './Components/Patient_Selection/patient_selection';
+import Report from './Components/Report/report';
+import MedicalNews from './Components/MedicalNews/MedicalNews';
+import ResetPassword from './Components/ResetPassword/resetPassword';
+import DataAggregation from './Components/Admin/DataAggregation/DataAggregation';
+import ProtectedRoute from './Components/ProtectedRoute';
+import UnprotectedRoute from './Components/UnprotectedRoute';
+import AdminSignUp from './Components/Admin/SignUp/SignUp';
+import AdminUnprotectedRoute from './Components/Admin/UnprotectedRoute';
+import AdminLogIn from './Components/Admin/LogIn/Login';
+import AdminProtectedRoute from './Components/Admin/ProtectedRoute';
 
 function App() {
   return (
     <Routes>
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/login" element={<LogIn />} />
-      <Route path="/welcome" element={<Welcome />} />
-      <Route path="/dashboard" element={<Risk_Dashboard />} />
-      <Route path="/patients" element={<Patient_Selection/>}/>
+      <Route path="/" element={
+        <UnprotectedRoute>
+        <SignUp />
+        </UnprotectedRoute>
+        } />
+      <Route path="/admin/" element={
+        <AdminUnprotectedRoute>
+        <AdminSignUp />
+        </AdminUnprotectedRoute>
+        } />
+      <Route path="/login" element={
+        <UnprotectedRoute>
+        <LogIn />
+        </UnprotectedRoute>
+      } />
+      <Route path="/admin/login" element={
+        <AdminUnprotectedRoute>
+        <AdminLogIn />
+        </AdminUnprotectedRoute>
+      } />
+      <Route path="/welcome" element={
+        <ProtectedRoute>
+        <Welcome />
+        </ProtectedRoute>
+      }/>
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+        <Risk_Dashboard />
+        </ProtectedRoute>
+        } 
+        />
+      <Route path="/patients" element={
+        <ProtectedRoute>
+        <Patient_Selection/>
+        </ProtectedRoute>
+        }/>
+      <Route path="/report" element={
+        <ProtectedRoute>
+        <Report/>
+        </ProtectedRoute>
+        }/>
+      <Route path="/news" element={
+        <ProtectedRoute>
+        <MedicalNews/>
+        </ProtectedRoute>
+        }/>
+      <Route path="/reset" element={<ResetPassword/>}/>
+      <Route path='/admin/data' element={
+        <AdminProtectedRoute>
+        <DataAggregation/>
+        </AdminProtectedRoute>
+        }/>
+
     </Routes>
   );
 }

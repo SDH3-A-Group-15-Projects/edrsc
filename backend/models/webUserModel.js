@@ -1,4 +1,5 @@
 import UserModel from './userModel.js';
+import { db } from '../utils/firebaseConfig.js';
 
 class WebUserModel extends UserModel {
   static _dbRef = "web/users";
@@ -23,6 +24,30 @@ class WebUserModel extends UserModel {
     return await super.getUserProfile(this._dbRef, uid);
   }
 
+static async getAllUserProfiles() {
+      try {
+        const profilesFromSuper = await super.getAllUserProfiles(this._dbRef);
+        if (profilesFromSuper.length === 0) return [];
+        else {
+          for (const doctor of profilesFromSuper) { 
+            const uid = doctor.uid;
+  
+            const patientsSnapshot = await db.ref(`${this._dbRef}/${uid}/patients`).once('value');
+            if (patientsSnapshot.exists()) {
+                doctor.patients = patientsSnapshot.val();
+            } else {
+                doctor.patients = null;
+            }
+          }
+        }
+        return profilesFromSuper;
+      } catch (e) {
+        console.error("Error getting patient profile:", e);
+        console.trace();
+        return null;
+      }
+    }
+
   static async updateUserProfile(uid, profileDataUpdate) {
     return await super.updateUserProfile(this._dbRef, uid, profileDataUpdate);
   }
@@ -40,35 +65,35 @@ class WebUserModel extends UserModel {
 
   static async addPatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients`);
-    questionnaireRef.push({uid: patientUID})
-    .then((snapshot) => {
-      console.log("New patient with UID", patientUID, "for user", uid, "with key:", snapshot.key);
-      console.log("Full reference:", snapshot.ref.toString());
-      return patientUID;
-    })
+    patientRef.child(patientUID).set(true)
     .catch((error) => {
       console.error("Error adding patient:", error);
       return null;
     });
+    return patientUID;
   }
 
   static async getPatients(uid) {
-    const patientRef = db.ref(`${this._dbRef}/${uid}/patients`);
-    patientRef.once('value').then((snapshot) => {
-        const patientsObject = snapshot.val();
-        if (patientsObject) {
-          const patientsArray = Object.keys(patientsObject).map(key => {return {...patientsObject[key]}});
-          return patientsArray;
-        } else return null;
-    })
-    .catch((e) => {
+    try {
+      const patientRef = db.ref(`${this._dbRef}/${uid}/patients`); 
+      const snapshot = await patientRef.once('value');
+      const patients = snapshot.val();
+
+      if (patients) {
+        const patientsArray = Object.keys(patients);
+        /*.map(key => {
+          return { ...patients[key] };
+        });*/
+        return patientsArray;
+      } else {
+        return null;
+      }
+    } catch (e) {
       console.error("Error getting patients:", e);
-    });
+      throw e;
+    }
   }
 
-  /**
-   * @todo: IDs fetchable by firebase aren't going to be the same as the patient IDs, you can find a way to set them when added
-   */
   static async removePatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients/${patientUID}`);
     return patientRef.remove()

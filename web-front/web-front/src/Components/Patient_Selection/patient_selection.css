@@ -8,6 +8,10 @@
     gap: 10px;
 }
 
+.ps-text {
+    color: white;
+}
+
 .ps-logo {
     font-size: x-large;
     font-weight: 700;

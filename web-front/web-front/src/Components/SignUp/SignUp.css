@@ -129,3 +129,17 @@
 .signInLink a:hover {
   text-decoration: underline;
 }
+
+.google-signin {
+  padding: 10px 15px;
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.google-logo {
+  margin-right: 10px;
+}

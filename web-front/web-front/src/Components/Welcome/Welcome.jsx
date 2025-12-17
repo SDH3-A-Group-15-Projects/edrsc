@@ -1,39 +1,60 @@
-import React from "react";
+import React from 'react';
 import dementia_logo from '../Assets/dementia logo.png'
 import './Welcome.css'
+import { useEffect, useState } from 'react'
+import { auth } from "../../index";
 import { Link, useLocation } from "react-router-dom";
 
 
 const Welcome = () => {
     const location = useLocation();
-    const lastName = location.state?.lastName || "";
+    const user = auth.currentUser;
+    const lastName = user?.displayName || "";
 
-    const patients = [
-        {
-            name: "Coleman, Alan",
-            dob: "09-04-1983",
-            AggregatedRisk: 0.5,
-            questionnaireAverageRisk: 0.5,
-            voiceAverageRisk: 0.5,
-            id: 1,
-        },
-        {
-            name: "Smith, Jane",
-            dob: "12-11-1978",
-            AggregatedRisk: 0.4,
-            questionnaireAverageRisk: 0.6,
-            voiceAverageRisk: 0.2,
-            id: 2,
-        },
-        {
-            name: "Brown, Michael",
-            dob: "03-23-1959",
-            AggregatedRisk: 0.7,
-            questionnaireAverageRisk: 0.6,
-            voiceAverageRisk: 0.8,
-            id: 3,
-        },
-    ];
+    const [patients, setPatients] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const validatePatient = (data) => {
+        return {
+            uid: data.uid,
+            checked: false,     // Track if checked in UI
+            firstName: (data.firstName && data.firstName !== "") ? data.firstName : "N/A",
+            lastName: (data.lastName && data.lastName !== "") ? data.lastName : "N/A",
+            dateOfBirth: (data.dateOfBirth && data.dateOfBirth !== "") ? data.dateOfBirth : "N/A",
+            averageRisk: (data.averageRisk != null && !isNaN(data.averageRisk)) ? data.averageRisk : 0,
+            questionnaireAverageRisk: (data.questionnaireAverageRisk != null && !isNaN(data.questionnaireAverageRisk)) ? data.questionnaireAverageRisk : 0,
+            voiceAverageRisk: (data.voiceAverageRisk != null && !isNaN(data.voiceAverageRisk)) ? data.voiceAverageRisk : 0,
+        };
+    };
+
+    useEffect(() => {
+        const fetchPatients = async () => {
+            try {      
+                if (!user) throw new Error("User not logged in");
+                const token = await user.getIdToken();
+
+                const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/patients/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch patients");
+
+                const data = await response.json();
+                const cleanData = (data || []).map(validatePatient);
+                setPatients(cleanData);
+                }
+                catch (err) {
+                console.error("Error fetching patients:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPatients();
+        }, []);
 
     return(
     <>
@@ -54,7 +75,7 @@ const Welcome = () => {
                     <tr>
                         <th>Name</th>
                         <th>Date of Birth</th>
-                        <th>Aggregate Risk</th>
+                        <th>Average Risk</th>
                         <th>Questionnaire Average risk</th>
                         <th>Speech Average risk</th>
                     </tr>
@@ -64,17 +85,21 @@ const Welcome = () => {
                         <tr key={patient.id}>
                             <td>
                                 <Link to="/dashboard" state={{ patient }} className="patient-link">
-                                    {patient.name}
+                                    {`${patient.lastName}, ${patient.firstName}`}
                                 </Link>
                             </td>
-                            <td>{patient.dob}</td>
-                            <td>{patient.AggregatedRisk*100}%</td>
+                            <td>{patient.dateOfBirth}</td>
+                            <td>{patient.averageRisk*100}%</td>
                             <td>{patient.questionnaireAverageRisk*100}%</td>
                             <td>{patient.voiceAverageRisk*100}%</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+        </div>
+        <div className="welcome-buttons">
+            <Link to="/news" className="welcome-btn">News</Link>
+            <Link to="/data" className="welcome-btn">Data Aggregation</Link>
         </div>
 
     </div>

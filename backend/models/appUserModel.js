@@ -9,19 +9,51 @@ class AppUserModel extends UserModel {
   }
 
   static async getUserProfile(uid) {
-    let patient;
+    try {
+      let patient = {};
+      const profileDataFromSuper = await super.getUserProfile(this._dbRef, uid);
+      patient.profile = profileDataFromSuper;
 
-    patient.profile = await super.getUserProfile(this._dbRef, uid);
+      const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+      if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+      else patient.riskFactors = null;
 
-    const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
-    if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
-    else patient.riskFactors = null;
+      const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+      if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+      else patient.results = null;
 
-    const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
-    if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
-    else patient.results = null;
+      return patient;
+    } catch (e) {
+      console.error("Error getting patient profile:", e);
+      console.trace();
+      return null;
+    }
+  }
 
-    return patient;
+  static async getAllUserProfiles() {
+    try {
+      const profilesFromSuper = await super.getAllUserProfiles(this._dbRef);
+      if (profilesFromSuper.length === 0) return [];
+      else {
+        for (const patient of profilesFromSuper) {
+          const uid = patient.uid;
+
+          const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
+          if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
+          else patient.riskFactors = null;
+
+          const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
+          if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
+          else patient.results = null;
+        }
+      }
+
+      return profilesFromSuper;
+    } catch (e) {
+      console.error("Error getting patient profile:", e);
+      console.trace();
+      return null;
+    }
   }
 
   static async updateUserProfile(uid, profileDataUpdate) {
@@ -64,6 +96,18 @@ class AppUserModel extends UserModel {
       return questionnaire;
     } catch (e) {
       console.error("Error adding questionnaire to database:", e.message);
+      return null;
+    }
+  }
+
+  static async getQuestionnaireById(uid, id) {
+    try {
+      const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire/${id}`);
+      const snapshot = await questionnaireRef.once('value');
+      if (snapshot.exists()) return snapshot.val();
+      else return null;
+    } catch (e) {
+      console.error(`Error getting questionnaire ${id}:`, e.message);
       return null;
     }
   }

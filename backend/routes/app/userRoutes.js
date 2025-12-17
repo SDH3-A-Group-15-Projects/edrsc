@@ -158,7 +158,7 @@ router.post('/:uid/results/questionnaire', authenticateToken, AppUserController.
  * On Failure: 400 "All questions must be answered."
  * 500 "No response from API"
  */
-router.post('/:uid/results/voice', authenticateToken, handleAudioUpload, AppUserController.submitVoice);
+router.post('/:uid/results/voice/:id', authenticateToken, handleAudioUpload, AppUserController.submitVoice);
 
 /**
  * Submit Risk Factors
@@ -185,5 +185,27 @@ router.post('/:uid/results/voice', authenticateToken, handleAudioUpload, AppUser
  * 500 "No response from API"
  */
 router.post('/:uid/results/riskfactors', authenticateToken, AppUserController.submitRiskFactors);
+
+/**
+ * Submit Form Data
+ * 
+ * Requires Authentication
+ * URL: /api/app/users/:uid/results/voice
+ * @param req
+ * Method: POST
+ * Body: FormData["audioFile"]
+ * FormData["questionnaire"]
+ * FormData["riskFactors"]
+ * @returns
+ * On Success: 201
+ * Body: {
+*           id: string,
+*           completionDate: string,
+*           calculatedRisk: float
+*         },
+ * On Failure: 400 "All questions must be answered."
+ * 500 "No response from API"
+*/
+//router.post('/:uid/results/', authenticateToken, handleAudioUpload, AppUserController.submitFormData);
 
 export default router;

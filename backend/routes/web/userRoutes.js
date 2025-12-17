@@ -131,7 +131,7 @@ router.delete('/:uid/profile', authenticateToken, WebUserController.deleteUserPr
 router.post('/:uid/patients/:patientuid', authenticateToken, WebUserController.addPatient);
 
 /**
- * Get Patients
+ * Get Patients For User
  * 
  * Requires Authentication
  * URL: /api/web/users/:uid/patients/
@@ -155,6 +155,32 @@ router.post('/:uid/patients/:patientuid', authenticateToken, WebUserController.a
  * 500
  */
 router.get('/:uid/patients/', authenticateToken, WebUserController.getPatients);
+
+/**
+ * Get All Unregistered Patients
+ * 
+ * Requires Authentication
+ * URL: /api/web/users/patients/
+ * @param req
+ * Method: GET
+ * Body: None
+ * @returns
+ * On Success: 200
+ * Body: [
+ *      {
+            firstName: string,
+            lastName: string,
+            dateOfBirth: string,
+            averageRisk: float,
+            questionnaireAverageRisk: float,
+            voiceAverageRisk: float, 
+ *      },
+ *      ...
+ *  ]
+ * On Failure: 404 "Patients not found"
+ * 500
+ */
+router.get('/:uid/unregistered/', authenticateToken, WebUserController.getAllUnregisteredPatients);
 
 /**
  * Delete Patient

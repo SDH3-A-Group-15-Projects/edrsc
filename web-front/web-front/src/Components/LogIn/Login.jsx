@@ -6,6 +6,7 @@ import password_icon from '../Assets/password icon.png'
 import dementia_logo from '../Assets/dementia logo.png'
 import { Link, useNavigate } from 'react-router-dom';
 import { loginWithEmail } from "../../utils/logInWithEmail";
+import { updateProfile } from "firebase/auth";
 
 const LogIn = () => {
     const navigate = useNavigate();
@@ -21,12 +22,27 @@ const LogIn = () => {
 
         try {
             const user = await loginWithEmail(email, password);
-            alert("Login succesful!");
+            
+            const token = await user.getIdToken();
 
-            const lastName = user?.lastName;
-            navigate("/welcome", { state: { lastName }});
+            const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile/`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to load user profile");
+            }
+
+            const profile = await response.json();
+
+            navigate("/patients");
         } catch (error) {
             console.error("Login failed:", error);
+            alert("Invalid email or password.")
         }
     };
 
@@ -44,7 +60,7 @@ const LogIn = () => {
                 <div className="text">Log In</div>
                 <div className="underline"></div>
                 <div className='signUpLink'>
-                Need an Account? <Link to="/signup">Sign up</Link>
+                Need an Account? <Link to="/">Sign up</Link>
                 </div>
             </div>
             <div className="inputs">
