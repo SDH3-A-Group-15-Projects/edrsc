@@ -160,6 +160,11 @@ class AppUserService extends UserService {
 
         await AppUserModel.submitRiskFactors(uid, riskFactors);
     }
+
+    static async submitAppRating(uid, rating, review) {
+        if (await AppUserModel.submitAppRating(uid, rating, review)) return rating;
+        else return null;
+    }
 }
 
 export default AppUserService;

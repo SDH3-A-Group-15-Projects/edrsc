@@ -8,4 +8,6 @@ router.get('/export', authenticateToken, AdminController.exportAnonymisedData);
 
 router.get('/doctors', authenticateToken, AdminController.getAllDoctors);
 
+router.get('/ratings', authenticateToken, AdminController.getAllRatings);
+
 export default router;

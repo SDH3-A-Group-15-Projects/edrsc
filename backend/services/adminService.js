@@ -26,6 +26,12 @@ class AdminService {
             return d;
         });
     }
+
+    static async getAllRatings() {
+        const ratings = await AppUserModel.getAllAppRatings();
+        if (!ratings || ratings.length === 0) return null;
+        return ratings;
+    }
 }
 
 export default AdminService;
