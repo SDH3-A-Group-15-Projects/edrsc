@@ -24,6 +24,30 @@ class WebUserModel extends UserModel {
     return await super.getUserProfile(this._dbRef, uid);
   }
 
+static async getAllUserProfiles() {
+      try {
+        const profilesFromSuper = await super.getAllUserProfiles(this._dbRef);
+        if (profilesFromSuper.length === 0) return [];
+        else {
+          for (const doctor of profilesFromSuper) { 
+            const uid = doctor.uid;
+  
+            const patientsSnapshot = await db.ref(`${this._dbRef}/${uid}/patients`).once('value');
+            if (patientsSnapshot.exists()) {
+                doctor.patients = patientsSnapshot.val();
+            } else {
+                doctor.patients = null;
+            }
+          }
+        }
+        return profilesFromSuper;
+      } catch (e) {
+        console.error("Error getting patient profile:", e);
+        console.trace();
+        return null;
+      }
+    }
+
   static async updateUserProfile(uid, profileDataUpdate) {
     return await super.updateUserProfile(this._dbRef, uid, profileDataUpdate);
   }

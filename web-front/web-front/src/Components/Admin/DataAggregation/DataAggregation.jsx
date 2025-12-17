@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react"
 import * as XLSX from 'xlsx'
 import "./DataAggregation.css"
+import { auth } from "../../../utils/firebaseAdminConfig.js";
 
 const DataAggregation = () => {
     const [uploadedData, setUploadedData] = useState([]);
     const [exportData, setExportData] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const user = auth.currentUser;
 
     const sampleTrainingData = [
         { id: 1, age: 72, gender: "F", memoryScore: 42, speechRate: 1.2 },
@@ -25,31 +30,59 @@ const DataAggregation = () => {
                     },
                 });
                 if (response.status === 404) {
-                    navigate("/welcome");
+                    setExportData([]);
                     return;
-                } else if (!response.ok) throw new Error("Failed to fetch patients");
-
+                } else if (!response.ok) throw new Error("Failed to fetch export data");
                 const data = await response.json();
-                const cleanData = (data || []).map(validatePatient);
+                const cleanData = (data || []);
                 if (cleanData.length === 0) {
-                    navigate("/welcome");
+                    setExportData([]);
                     return;
                 }
-                setPatients(cleanData);
-                }
-                catch (err) {
-                console.error("Error fetching patients:", err);
+                setExportData(cleanData);
+                console.log(cleanData)
+            } catch (err) {
+            console.error("Error fetching export data:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPatients();
+        fetchExportData();
     }, []);
+
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            try {      
+                if (!user) throw new Error("User not logged in");
+                const token = await user.getIdToken();
+
+                const response = await fetch(`http://localhost:3001/api/admin/doctors/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch doctors");
+
+                const data = await response.json();
+                setDoctors(data);
+                console.log(data);
+                }
+                catch (err) {
+                console.error("Error fetching doctors:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDoctors();
+        }, []);
 
     const exportToExcel = () => {
         const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(sampleTrainingData);
+        const ws = XLSX.utils.json_to_sheet(exportData);
         XLSX.utils.book_append_sheet(wb,ws, "TrainingData");
         XLSX.writeFile(wb, "anonymised_training_dataset.xlsx");
     };
@@ -83,6 +116,30 @@ const DataAggregation = () => {
         </div>
 
         <div className="backdrop">
+            <div className="table-container">
+                <h2>Doctor Profiles</h2>
+                <table className="doctor-table">
+                    <thead>
+                        <tr>
+                            <th>UID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>No. of Patients</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {doctors.map((doctor) => (
+                            <tr key={doctor.uid}>
+                                <td>{doctor.uid}</td>
+                                <td>{doctor.firstName}</td>
+                                <td>{doctor.lastName}</td>
+                                <td>{doctor.noOfPatients}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
             <div className="report-filter-panel">
                 <h3>Download Current Dataset</h3>
                 <p>Export anonymised training data.</p>

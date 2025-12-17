@@ -72,6 +72,8 @@ class AppUserController extends UserController {
             res.status(500).send("No response from API");
         }
     }
+
+    
 }
 
 export default AppUserController;

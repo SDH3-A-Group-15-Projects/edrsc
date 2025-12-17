@@ -7,7 +7,7 @@ import {BrowserRouter} from 'react-router-dom';
 import { initializeApp} from 'firebase/app';
 import { getAnalytics} from "firebase/analytics";
 import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -36,9 +36,9 @@ const firebaseConfig = {
   appId: "1:673535448187:web:1fe648ad89c89d73297ede",
 
   measurementId: "G-P4CZT4V2DR"
-}
+};
 
-const app = initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig);
 
 const analytics = getAnalytics(app);
 
@@ -55,4 +55,4 @@ onAuthStateChanged(auth, (user) => {
 
 reportWebVitals();
 
-export const db = getFirestore(app);
+export const db = getDatabase(app);

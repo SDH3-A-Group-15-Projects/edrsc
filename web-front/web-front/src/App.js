@@ -7,9 +7,13 @@ import Patient_Selection from './Components/Patient_Selection/patient_selection'
 import Report from './Components/Report/report';
 import MedicalNews from './Components/MedicalNews/MedicalNews';
 import ResetPassword from './Components/ResetPassword/resetPassword';
-import DataAggregation from './Components/DataAggregation/DataAggregation';
+import DataAggregation from './Components/Admin/DataAggregation/DataAggregation';
 import ProtectedRoute from './Components/ProtectedRoute';
 import UnprotectedRoute from './Components/UnprotectedRoute';
+import AdminSignUp from './Components/Admin/SignUp/SignUp';
+import AdminUnprotectedRoute from './Components/Admin/UnprotectedRoute';
+import AdminLogIn from './Components/Admin/LogIn/Login';
+import AdminProtectedRoute from './Components/Admin/ProtectedRoute';
 
 function App() {
   return (
@@ -19,10 +23,20 @@ function App() {
         <SignUp />
         </UnprotectedRoute>
         } />
+      <Route path="/admin/" element={
+        <AdminUnprotectedRoute>
+        <AdminSignUp />
+        </AdminUnprotectedRoute>
+        } />
       <Route path="/login" element={
         <UnprotectedRoute>
         <LogIn />
         </UnprotectedRoute>
+      } />
+      <Route path="/admin/login" element={
+        <AdminUnprotectedRoute>
+        <AdminLogIn />
+        </AdminUnprotectedRoute>
       } />
       <Route path="/welcome" element={
         <ProtectedRoute>
@@ -51,11 +65,12 @@ function App() {
         </ProtectedRoute>
         }/>
       <Route path="/reset" element={<ResetPassword/>}/>
-      <Route path='/data' element={
-        <ProtectedRoute>
+      <Route path='/admin/data' element={
+        <AdminProtectedRoute>
         <DataAggregation/>
-        </ProtectedRoute>
+        </AdminProtectedRoute>
         }/>
+
     </Routes>
   );
 }
