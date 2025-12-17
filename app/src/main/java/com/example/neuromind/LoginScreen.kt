@@ -40,7 +40,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
-    onLoggedIn: (String) -> Unit = {}
+    onLoggedIn: (String) -> Unit = {},
+    onForgotPassword: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val auth = remember { FirebaseAuth.getInstance() }
@@ -170,13 +171,7 @@ fun LoginScreen(
             Spacer(Modifier.height(8.dp))
 
             TextButton(
-                onClick = {
-                    Toast.makeText(
-                        context,
-                        "Password recovery not implemented yet",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                },
+                onClick = { onForgotPassword() },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -186,6 +181,7 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
         }
     }
 }

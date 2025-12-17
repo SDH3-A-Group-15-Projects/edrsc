@@ -108,16 +108,16 @@ fun DashboardTile(
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
         border = BorderStroke(1.dp, clr_panel_border),
-        modifier = modifier.height(130.dp)
+        modifier = modifier.height(110.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(10.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(48.dp)
                     .clip(RoundedCornerShape(28.dp))
                     .background(clr_field_backgrnd)
                     .border(1.dp, clr_fieldStroke, RoundedCornerShape(28.dp)),

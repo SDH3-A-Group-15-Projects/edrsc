@@ -1,5 +1,6 @@
 package com.example.neuromind
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,11 +40,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalMaterial3Api::class  )
 @Composable
 fun MedicalAssessmentScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onNext: (age: Double, sleepHours: Double) -> Unit ={_, _ ->}
 ) {
     val gradient = Brush.verticalGradient(
         0.0f to clr_bckgrnd_top,
@@ -50,7 +55,9 @@ fun MedicalAssessmentScreen(
         1.0f to clr_bckgrnd_bottom
     )
 
-    var dob by remember { mutableStateOf("") }
+    var ageText by remember { mutableStateOf("") }
+    var sleepHoursText by remember { mutableStateOf("") }
+    val context = LocalContext.current
     var onMedication by remember { mutableStateOf("No")}
     var smoke by remember { mutableStateOf("Yes") }
     var diabetic by remember { mutableStateOf("No") }
@@ -58,8 +65,6 @@ fun MedicalAssessmentScreen(
     var depression by remember { mutableStateOf("No")}
     var physicallyActive by remember { mutableStateOf("Yes")}
     var healthyDiet by remember {mutableStateOf("Yes")}
-    var sleepPattern by remember {mutableStateOf("")}
-
     var mentalActivity by remember { mutableStateOf("Often") }
     var familyHistory by remember { mutableStateOf("No") }
 
@@ -117,17 +122,29 @@ fun MedicalAssessmentScreen(
                 )
 
                 Spacer(Modifier.height(12.dp))
+
                 OutlinedTextField(
-                    value = dob,
-                    onValueChange = { dob = it},
-                    label = { Text("Date of Birth (DD/MM/YYYY)",
-                        color = clr_onPrimary) },
-                    placeholder = { Text("Enter your date of birth",
-                        color = clr_onPrimary)
-                                  },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    modifier = Modifier.fillMaxWidth()
+                    value = ageText,
+                    onValueChange = { ageText = it },
+                    label = { Text("Age (years)", color = clr_onPrimary) },
+                    placeholder = { Text("Enter your age", color = clr_onPrimary) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = LocalTextStyle.current.copy(color = clr_onPrimary)
                 )
+
+                Spacer(Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = sleepHoursText,
+                    onValueChange = { sleepHoursText = it },
+                    label = { Text("Average hours of sleep per night", color = clr_onPrimary) },
+                    placeholder = { Text("e.g. 7.5", color = clr_onPrimary) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = LocalTextStyle.current.copy(color = clr_onPrimary)
+                )
+
 
                 Spacer(Modifier.height(16.dp))
                 DropdownField(
@@ -209,25 +226,21 @@ fun MedicalAssessmentScreen(
                     onSelect = { familyHistory = it }
                 )
 
-                Spacer(Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = sleepPattern,
-                    onValueChange = { sleepPattern = it},
-                    label = { Text("How would you describe your sleep pattern?",
-                        color = clr_onPrimary)},
-                    placeholder = {Text("Briefly describe your sleep schedule.",
-                        color = clr_onPrimary)
-                                  },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    modifier = Modifier.fillMaxWidth()
-                        .height(100.dp),
-                    singleLine = false,
-                    maxLines = 4
-                )
-
                 Spacer(Modifier.height(20.dp))
                 Button(
-                    onClick = { onBack() },
+                    onClick = {
+                        val ageVal = ageText.toDoubleOrNull()
+                        val sleepVal = sleepHoursText.toDoubleOrNull()
+
+                        if (ageVal == null || sleepVal == null){
+                            Toast.makeText(context,
+                                "Please enter valid age and sleep hours",
+                                Toast.LENGTH_SHORT).show()
+
+                        } else{
+                            onNext(ageVal, sleepVal)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

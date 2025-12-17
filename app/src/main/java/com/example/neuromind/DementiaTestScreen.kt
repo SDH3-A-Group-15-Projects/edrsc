@@ -37,12 +37,13 @@ import retrofit2.Response
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DementiaTestScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onResult: (Int) -> Unit = {}
 ) {
     val context = LocalContext.current
-    var age by remember { mutableStateOf("65") }
-    var sleep by remember { mutableStateOf("7.0") }
-    var memory by remember { mutableStateOf("45.0") }
+    var age by remember { mutableStateOf("78") }
+    var sleep by remember { mutableStateOf("5.0") }
+    var memory by remember { mutableStateOf("3.0") }
     var speech by remember { mutableStateOf("Um, I often forget names and sometimes repeat myself.") }
 
     var loading by remember { mutableStateOf(false) }
@@ -61,18 +62,31 @@ fun DementiaTestScreen(
     }
 
     fun runPrediction() {
+        // Parse inputs
         val ageI = age.toIntOrNull()
         val sleepD = sleep.toDoubleOrNull()
         val memoryD = memory.toDoubleOrNull()
-        if (ageI == null || sleepD == null || memoryD == null) {
-            Toast.makeText(context, "Enter valid numbers", Toast.LENGTH_SHORT).show(); return
-        }
-        val req = PredictRequest(
-            age = ageI, sleep_hours = sleepD, memory_score = memoryD, speech_text = speech
-        )
-        loading = true; errorText = null; resultText = null
 
-        RetrofitClient.instance.getPrediction(req).enqueue(object : Callback<PredictResponse> {
+        if (ageI == null || sleepD == null || memoryD == null) {
+            Toast.makeText(context, "Enter valid numbers", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Clamp memory score to the range the model was trained on (0–5 here)
+        val memoryClamped = memoryD.coerceIn(0.0, 5.0)
+
+        val req = PredictRequest(
+            age = ageI,
+            sleep_hours = sleepD,
+            memory_score = memoryClamped,   // <-- use clamped value
+            speech_text = speech            // later: use Whisper transcript instead
+        )
+
+        loading = true
+        errorText = null
+        resultText = null
+
+        RetrofitClient.apiService.getPrediction(req).enqueue(object : Callback<PredictResponse> {
             override fun onResponse(
                 call: Call<PredictResponse>,
                 response: Response<PredictResponse>
@@ -80,20 +94,30 @@ fun DementiaTestScreen(
                 loading = false
                 if (response.isSuccessful) {
                     val body = response.body()
-                    val high = body?.probability?.get("High Risk")
-                    val low = body?.probability?.get("Low Risk")
+
+                    val high = body?.probability?.get("high_risk") ?: 0.0
+                    val low = body?.probability?.get("low_risk") ?: 0.0
+
                     resultText =
-                        "Prediction: ${body?.prediction}\nHigh Risk: ${high}%\nLow Risk: ${low}%"
+                        "Prediction: ${body?.prediction}\n" +
+                                "High Risk: ${"%.2f".format(high)}%\n" +
+                                "Low Risk: ${"%.2f".format(low)}%"
+
+                    val scoreInt = high.toInt()
+                    // ... whatever you do with scoreInt
                 } else {
-                    errorText = "Error: ${response.code()} ${response.message()}"
+                    errorText = "Server error: ${response.code()}"
                 }
             }
 
             override fun onFailure(call: Call<PredictResponse>, t: Throwable) {
-                loading = false; errorText = "Failed: ${t.localizedMessage}"
+                loading = false
+                errorText = "Connection failed: ${t.message}"
             }
         })
+
     }
+
 
     Scaffold(
         topBar = {

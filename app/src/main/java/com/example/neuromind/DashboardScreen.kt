@@ -39,15 +39,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.outlined.Article
+import androidx.compose.material.icons.outlined.Article
+import androidx.compose.material.icons.outlined.Payment
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     name: String,
+    lastRiskScore: Int?,
+    onOpenCognitive: () -> Unit,
     onOpenTest: () -> Unit,
     onOpenSpeech: () -> Unit,
     onOpenMedical: () -> Unit,
-    onSignOut: () -> Unit
+    onOpenRisk: () -> Unit,
+    onSignOut: () -> Unit,
+    onOpenContact: () -> Unit,
+    onOpenNews: () -> Unit,
+    onOpenPayments: () -> Unit,
+    onOpenRatings: () -> Unit
 ) {
     val gradient = Brush.verticalGradient(
         0.0f to clr_bckgrnd_top,
@@ -112,7 +124,7 @@ fun DashboardScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
-                            text = "Welcome ${name.ifBlank { "Doctor" }}",
+                            text = "Welcome ${name.ifBlank { " " }}",
                             style = MaterialTheme.typography.titleMedium,
                             color = clr_onPrimary
                         )
@@ -120,7 +132,11 @@ fun DashboardScreen(
                 }
 
                 // Feature grid
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Row 1
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -138,6 +154,8 @@ fun DashboardScreen(
                             modifier = Modifier.weight(1f)
                         )
                     }
+
+                    // Row 2
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -145,17 +163,37 @@ fun DashboardScreen(
                         DashboardTile(
                             title = "Cognitive Mini-Test",
                             icon = Icons.Outlined.Psychology,
-                            onClick = onOpenTest,
+                            onClick = onOpenCognitive,
                             modifier = Modifier.weight(1f)
                         )
                         DashboardTile(
                             title = "Dementia Risk Score\n& Evaluation",
                             icon = Icons.Outlined.AssignmentTurnedIn,
-                            onClick = onOpenTest,
+                            onClick = onOpenRisk,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Row 3 – News + Payments (same width as above)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        DashboardTile(
+                            title = "Dementia News",
+                            icon = Icons.Outlined.Article,
+                            onClick = onOpenNews,
+                            modifier = Modifier.weight(1f)
+                        )
+                        DashboardTile(
+                            title = "Premium & Payments",
+                            icon = Icons.Outlined.Payment,
+                            onClick = onOpenPayments,
                             modifier = Modifier.weight(1f)
                         )
                     }
                 }
+
 
                 // Score panel
                 Surface(
@@ -206,8 +244,16 @@ fun DashboardScreen(
                                 color = clr_onPrimary.copy(alpha = 0.9f)
                             )
                             Spacer(Modifier.height(4.dp))
+                            val dashScore = lastRiskScore
+                            val dashLabel = when {
+                                dashScore == null -> "No test taken yet"
+                                dashScore < 33    -> "Low Risk"
+                                dashScore < 66    -> "Medium Risk"
+                                else              -> "High Risk"
+                            }
+
                             Text(
-                                "20% (Low Risk)",
+                                text = dashScore?.let { "$it% ($dashLabel)" } ?: dashLabel,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color(0xFF8EF1A8)
                             )
@@ -238,6 +284,33 @@ fun DashboardScreen(
                     color = clr_onPrimary.copy(alpha = 0.75f),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+
+                Row(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(onClick = onOpenContact) {
+                        Text(
+                            "Contact Us",
+                            color = clr_hyperLink
+                        )
+                    }
+
+                    Text(
+                        text = " | ",
+                        color = clr_hyperLink,
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    )
+
+                    TextButton(onClick = onOpenRatings) {
+                        Text(
+                            "Rate Us",
+                            color = clr_hyperLink
+                        )
+                    }
+                }
+
+
             }
         }
     }

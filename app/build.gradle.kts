@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services") // google services plugin
+    id("com.google.gms.google-services")// google services plugin
 }
 
 android {
@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.neuromind"
-        minSdk = 36
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -26,7 +26,7 @@ android {
     buildTypes {
         debug {
             // turn emulator on and off here
-            buildConfigField("boolean", "USE_FIREBASE_EMULATOR", "true")
+            buildConfigField("boolean", "USE_FIREBASE_EMULATOR", "false")
 
             buildConfigField("String", "AUTH_EMULATOR_HOST", "\"10.0.2.2\"")
             buildConfigField("int", "AUTH_EMULATOR_PORT", "9099")
@@ -56,10 +56,11 @@ dependencies {
     // Retrofit + Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-// Jetpack Navigation for Compose
+    // Jetpack Navigation for Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation(platform("com.google.firebase:firebase-bom:34.3.0")) // firebase
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
@@ -81,4 +82,10 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(platform("androidx.compose:compose-bom:2024.10.00"))
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    // ViewModel + lifecycle for StateFlow collecting in Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
 }
