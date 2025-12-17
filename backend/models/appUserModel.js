@@ -100,6 +100,18 @@ class AppUserModel extends UserModel {
     }
   }
 
+  static async getQuestionnaireById(uid, id) {
+    try {
+      const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire/${id}`);
+      const snapshot = await questionnaireRef.once('value');
+      if (snapshot.exists()) return snapshot.val();
+      else return null;
+    } catch (e) {
+      console.error(`Error getting questionnaire ${id}:`, e.message);
+      return null;
+    }
+  }
+
   static async submitVoice(uid, voice) {
     try {
       const voiceRefPath = db.ref(`${this._dbRef}/${uid}/results/voice`);

@@ -1,5 +1,6 @@
 import UserService from "./userService.js";
 import AppUserModel from "../models/appUserModel.js";
+import App from "../../web-front/web-front/src/App.js";
 
 class AppUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email, dateOfBirth) {
@@ -67,7 +68,7 @@ class AppUserService extends UserService {
     }
 
     static async submitQuestionnaire(uid, questionnaire) {
-        await fetch("http://localhost:3002/questionnaire", {
+        /*await fetch("http://localhost:3002/questionnaire", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -76,24 +77,33 @@ class AppUserService extends UserService {
         })
         .then(response => response.json())
         .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
-        .catch(error => console.error("Error:", error));
+        .catch(error => console.error("Error:", error));*/
 
         questionnaire.completionDate = new Date().toISOString();
         questionnaire = await AppUserModel.submitQuestionnaire(uid, questionnaire);
-
         if (questionnaire) {
+            return questionnaire.id;
+        } else return null;
+
+        /*if (questionnaire) {
             const newResults = await this.recalculateAvgRisk(uid);
             // If this does not return null
             if (await this.updateUserResults(uid, newResults)) return questionnaire;
             else return null;
-        } else return null;
+        } else return null;*/
     }
 
-    static async submitVoice(uid, voice) {
+    static async submitVoice(uid, id, voice) {
         try {
             let voiceResult = {
                 calculatedRisk: 0,
-                completionDate: ""
+                completionDate: new Date().toISOString()
+            };
+
+            const questionnaire = await AppUserModel.getQuestionnaireById(uid, id);
+            if (!questionnaire) {
+                console.error("Questionnaire not found for voice submission.");
+                return null;
             }
 
             const form = new FormData();
@@ -101,6 +111,7 @@ class AppUserService extends UserService {
                 filename: voice.originalname,
                 contentType: voice.mimetype
             });
+            form.append("questionnaire", JSON.stringify(questionnaire));
 
             await fetch("http://localhost:3002/voice", {
                 method: "POST",
@@ -111,17 +122,25 @@ class AppUserService extends UserService {
                 
             })
             .then(response => response.json())
-            .then(data => voice.calculatedRisk = data.calculatedRisk)
+            .then(data => {
+                voiceResult.calculatedRisk = data.voiceCalculatedRisk;
+                questionnaire.calculatedRisk = data.questionnaireCalculatedRisk;
+            })
             .catch(error => console.error("Error:", error));
-
-            voice.completionDate = new Date().toISOString();
+            const testResult = {
+                questionnaireRisk: questionnaire.calculatedRisk / 100.0,
+                voiceRisk: voiceResult.calculatedRisk / 100.0,
+                overallRisk: (questionnaire.calculatedRisk + voiceResult.calculatedRisk) / 200.0
+            };
             voiceResult = await AppUserModel.submitVoice(uid, voiceResult);
 
             if (voiceResult) {
                 const newResults = await this.recalculateAvgRisk(uid);
                 // If this does not return null
-                if (await this.updateUserResults(uid, newResults)) return voiceResult;
-                else return null;
+                if (!await this.updateUserResults(uid, newResults)) {
+                    console.error("Failed to update results, returning current result.");
+                };
+                return testResult;
             } else return null;
         }
         catch (e) {

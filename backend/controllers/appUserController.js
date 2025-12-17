@@ -39,13 +39,14 @@ class AppUserController extends UserController {
     static async submitVoice(req, res) {
         try {
             const voice = req.file;
+            const id = req.params.id;
             if (!voice) {
                 const errMsg = "No Audio File Found after Upload";
                 console.error(errMsg);
                 console.trace();
                 return res.status(400).send(errMsg);
             }
-            const result = await AppUserService.submitVoice(req.user.uid, voice);
+            const result = await AppUserService.submitVoice(req.user.uid, id, voice);
             if (result) res.status(201).json(result);
             else res.status(500).send("No response from API");
         } catch (e) {
