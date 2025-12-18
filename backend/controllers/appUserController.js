@@ -22,12 +22,12 @@ class AppUserController extends UserController {
         try {
             const questionnaire = req.body;
 
-            for (q in questionnaire) {
+            for (const q in questionnaire) {
                 if (questionnaire[q] == "") return res.status(400).send("All questions must be answered.");
             }
 
             const result = await AppUserService.submitQuestionnaire(req.user.uid, questionnaire);
-            if (result) res.status(201).json(result);
+            if (result) res.status(201).json({id: result});
             else res.status(500).send("No response from API");
         } catch (e) {
             console.error(e.message);
@@ -40,6 +40,7 @@ class AppUserController extends UserController {
         try {
             const voice = req.file;
             const id = req.params.id;
+            console.log("Received voice submission for user:", req.user.uid, "with file:", voice ? voice.originalname : "No file");
             if (!voice) {
                 const errMsg = "No Audio File Found after Upload";
                 console.error(errMsg);
@@ -60,7 +61,7 @@ class AppUserController extends UserController {
         try {
             const riskFactors = req.body;
 
-            for (q in riskFactors) {
+            for (const q in riskFactors) {
                 if (!riskFactors[q]) return res.status(400).send("All risk factors must be answered.");
             }
 

@@ -1,6 +1,5 @@
 import UserService from "./userService.js";
 import AppUserModel from "../models/appUserModel.js";
-import App from "../../web-front/web-front/src/App.js";
 
 class AppUserService extends UserService {
     static async createUserProfile(uid, firstName, lastName, email, dateOfBirth) {
@@ -24,6 +23,11 @@ class AppUserService extends UserService {
         return patient.profile;
     }
 
+        static async getUser(uid) {
+        const patient = await super.getUserProfile(AppUserModel, uid);
+        return patient;
+    }
+
     static async updateUserProfile(uid, firstName, lastName, email, dateOfBirth) {
         return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth);
     }
@@ -37,8 +41,10 @@ class AppUserService extends UserService {
     }
 
     static async recalculateAvgRisk(uid) {
-        let profile = await this.getUserProfile(uid);
+        let profile = await this.getUser(uid);
         let results = profile.results;
+        console.log(results);
+        console.log(profile);
 
         let qRisk = 0;
         let qCount = 0;
@@ -46,13 +52,13 @@ class AppUserService extends UserService {
         let vCount = 0;
         let avgRisk = 0;
 
-        for (q of results.questionnaire) {
-            qRisk += q.calculatedRisk;
+        for (const q of Object.values(results.questionnaire)) {
+            qRisk += q.calculatedRisk || 0;
             qCount++;
         }
 
-        for (v of results.voice) {
-            vRisk += v.calculatedRisk;
+        for (const v of Object.values(results.voice)) {
+            vRisk += v.calculatedRisk || 0;
             vCount++;
         }
 
@@ -95,6 +101,7 @@ class AppUserService extends UserService {
 
     static async submitVoice(uid, id, voice) {
         try {
+            console.log("Submitting voice for user:", uid, "and questionnaire ID:", id);
             let voiceResult = {
                 calculatedRisk: 0,
                 completionDate: new Date().toISOString()
@@ -106,13 +113,16 @@ class AppUserService extends UserService {
                 return null;
             }
 
+            const voiceBlob = new Blob([voice.buffer], { type: voice.mimetype });
+
             const form = new FormData();
-            form.append("audioFile", voice.buffer, {
+            form.append("audioFile", voiceBlob, {
                 filename: voice.originalname,
                 contentType: voice.mimetype
             });
             form.append("questionnaire", JSON.stringify(questionnaire));
 
+            /*
             await fetch("http://localhost:3002/voice", {
                 method: "POST",
                 headers: {
@@ -126,7 +136,9 @@ class AppUserService extends UserService {
                 voiceResult.calculatedRisk = data.voiceCalculatedRisk;
                 questionnaire.calculatedRisk = data.questionnaireCalculatedRisk;
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => console.error("Error:", error));*/
+            voiceResult.calculatedRisk = 50.0; // Placeholder value
+            questionnaire.calculatedRisk = 50.0; // Placeholder value
             const testResult = {
                 questionnaireRisk: questionnaire.calculatedRisk / 100.0,
                 voiceRisk: voiceResult.calculatedRisk / 100.0,
@@ -144,6 +156,7 @@ class AppUserService extends UserService {
             } else return null;
         }
         catch (e) {
+            console.error("Error in submitVoice:", e);
             return null;
         }
     }

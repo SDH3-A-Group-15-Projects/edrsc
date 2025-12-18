@@ -13,11 +13,7 @@ class AppUserModel extends UserModel {
       let patient = {};
       const profileDataFromSuper = await super.getUserProfile(this._dbRef, uid);
       patient.profile = profileDataFromSuper;
-
-      const riskFactorsSnapshot = await db.ref(`${this._dbRef}/${uid}/riskfactors`).once('value');
-      if (riskFactorsSnapshot.exists()) patient.riskFactors = riskFactorsSnapshot.val();
-      else patient.riskFactors = null;
-
+      
       const resultsSnapshot = await db.ref(`${this._dbRef}/${uid}/results`).once('value');
       if (resultsSnapshot.exists()) patient.results = resultsSnapshot.val();
       else patient.results = null;
@@ -118,7 +114,7 @@ class AppUserModel extends UserModel {
       const voiceRef = voiceRefPath.push();
       voice.id = voiceRef.key;
 
-      if (!questionnaire.id) {
+      if (!voice.id) {
         console.error("Failed to generate key for voice results.");
         return null;
       }
