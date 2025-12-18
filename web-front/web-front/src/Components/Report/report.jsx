@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import dementia_logo from "../Assets/dementia logo.png";
 import "./report.css";
 import { db } from "../../index";
-import { collection, getDocs } from "firebase/firestore";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { getDatabase, ref, get } from "firebase/database";
 
 
 const Reports = () => {
@@ -44,12 +44,24 @@ const Reports = () => {
     // Load patient data
     useEffect(() => {
         const fetchPatients = async () => {
-            const snapshot = await getDocs(collection(db, "patients"));
-            const patientData = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
+            try {
+                const database = getDatabase();
+                const snapshot = await get(ref(database, "patients"));
+
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+
+                    const patientData = Object.entries(data).map(([id, value]) => ({
+                        id,
+                        ...value,
+                    }));
             setPatients(patientData);
+                } else {
+                    setPatients([]);
+                }
+        } catch (error) {
+            console.error("Error fetching patients:", error);
+        }
         };
         fetchPatients();
     }, []);
@@ -111,7 +123,7 @@ const Reports = () => {
     if ( !paymentVerified ) {
             return null;
         }
-        
+
     return (
         <>
             <div className="top-right-container">

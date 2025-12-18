@@ -21,32 +21,27 @@ const Risk_Dashboard = () => {
 }, [patient, navigate]);
 
     const handleGoToReport = async () => {
-        try {
-            const response = await fetch(
-                `http://localhost:3001/api/web/payments/create-checkout-session`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        patientId: patient.uid,
-                    }),
-                }
-            );
+  try {
+    const response = await fetch(
+      "http://localhost:3001/api/web/payments/create-checkout-session",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patientId: patient.uid }),
+      }
+    );
 
-            const data = await response.json();
+    const data = await response.json();
 
-            if (data.paid) {
-                navigate('/report', { state: { patient } });
-            } else if (data.checkoutUrl) {
-                window.location.href = data.checkoutUrl;
-            }
-        } catch (error) {
-            console.error("Payment error:", error);
-            alert("Payment process failed. Please try again.");
-        }
-    };
+    if (!response.ok) throw new Error(data.error || "Payment failed");
+    window.location.assign(data.url); 
+  } catch (err) {
+    console.error("Payment error:", err);
+    alert(err.message || "Payment failed");
+  }
+};
+
+
 
     return (
         <>
