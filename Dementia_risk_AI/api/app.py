@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import json
 import joblib
 import os
 from utils.features_extraction import extract_speech_features
@@ -22,6 +23,38 @@ scaler = joblib.load(scaler_path)
 def home():
     return jsonify({"message": "Flask API is running!"})
 
+@app.route("/voice", methods=["POST"])
+def voice():
+    voice = request.files.get("audioFile")
+    questionnaire = request.form.get("questionnaire")
+
+    if not voice or not questionnaire:
+        return jsonify({"error": "Missing audioFile or questionnaire"}), 400
+    
+    try:
+        data = json.loads(questionnaire)
+
+        age = data.get("age")
+        sleep_hours = data.get("sleep_hours")
+        is_on_medication = data.get("is_on_medication")
+        smokes = data.get("smokes")
+        is_diabetic = data.get("is_diabetic")
+        drinks_alcohol = data.get("drinks_alcohol")
+        has_depression = data.get("has_depression")
+        is_physically_active = data.get("is_physically_active")
+        has_healthy_diet = data.get("has_healthy_diet")
+        is_mentally_active = data.get("is_mentally_active")
+        has_family_history_of_dementia = data.get("has_family_history_of_dementia")
+
+        return jsonify({
+            "questionnairecalculatedRisk": 50,
+            "voiceCalculatedRisk": 30
+        })
+
+    except json.JSONDecodeError:
+        return jsonify({"error": "The metadata field was not valid JSON"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/predict", methods=["POST"])
 def predict():
