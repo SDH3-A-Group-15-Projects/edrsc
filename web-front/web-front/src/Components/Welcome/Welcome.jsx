@@ -22,6 +22,7 @@ const Welcome = () => {
     const [loading, setLoading] = useState(true);
 
     const validatePatient = (data) => {
+        console.log("UID =", data.uid);
         return {
             uid: data.uid,
             checked: false,     // Track if checked in UI
@@ -90,9 +91,9 @@ const Welcome = () => {
                 </thead>
                 <tbody>
                     {patients.map((patient) => (
-                        <tr key={patient.id}>
+                        <tr key={patient.uid}>
                             <td>
-                                <Link to="/dashboard" state={{ patient }} className="patient-link">
+                                <Link to="/dashboard" state={{ patient }} onClick={() => localStorage.setItem("selectedPatient", JSON.stringify(patient))} className="patient-link">
                                     {`${patient.lastName}, ${patient.firstName}`}
                                 </Link>
                             </td>

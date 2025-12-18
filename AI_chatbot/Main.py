@@ -2,11 +2,9 @@ from openai import OpenAI
 from mem0 import Memory
 import os
 import json
+from dotenv import load_dotenv
 
 load_dotenv()  # loads .env file
-from openai import OpenAI
-from mem0 import Memory
-
 # -------------------------
 # SET API KEYS
 # -------------------------

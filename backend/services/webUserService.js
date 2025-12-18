@@ -38,6 +38,7 @@ class WebUserService extends UserService {
                     const patient = await AppUserModel.getUserProfile(p);
                     if (!patient || !patient.profile) continue;
                     const patientSummary = {
+                        uid: p,
                         firstName: patient.profile.firstName,
                         lastName: patient.profile.lastName,
                         dateOfBirth: patient.profile.dateOfBirth,
