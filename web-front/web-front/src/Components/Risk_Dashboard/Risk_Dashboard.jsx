@@ -7,9 +7,33 @@ const Risk_Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const patient = location.state?.patient;
+    const doctor = location.state?.doctor;
 
-    const handleGoToReport = () => {
+    const handleGoToReport = async () => {
+        try {
+            const response = await fetch(
+                `http://localhost:3001/api/web/payments/create-checkout-session`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        doctorId: doctor.id,
+                }),
+    });
+
+    const data = await response.json();
+
+    if (data.paid) {
         navigate('/report', { state: { patient } });
+    } else if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+    }
+} catch (error) {
+    console.error("Payment error:", error);
+    alert("Payment process failed. Please try again.");
+}
     };
 
     return(

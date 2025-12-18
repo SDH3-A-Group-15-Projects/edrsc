@@ -1,46 +1,43 @@
 import React from 'react';
-import dementia_logo from '../Assets/dementia logo.png'
+import dementia_logo from '../../Assets/dementia logo.png'
 import './Welcome.css'
 import { useEffect, useState } from 'react'
-import { auth } from "../../index";
+import { auth } from "../../../index";
 import { Link, useLocation } from "react-router-dom";
 
 
-const Welcome = () => {
+const AdminWelcome = () => {
     const location = useLocation();
     const user = auth.currentUser;
     const lastName = user?.displayName || "";
 
         const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this patient?")) {
-            console.log(`Patient with id ${id} deleted.`);
+        if (window.confirm("Are you sure you want to delete this doctor?")) {
+            console.log(`Doctor with id ${id} deleted.`);
         }
     };
 
 
-    const [patients, setPatients] = useState([]);
+    const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const validatePatient = (data) => {
+    const validateDoctor = (data) => {
         return {
             uid: data.uid,
             checked: false,     // Track if checked in UI
             firstName: (data.firstName && data.firstName !== "") ? data.firstName : "N/A",
             lastName: (data.lastName && data.lastName !== "") ? data.lastName : "N/A",
             dateOfBirth: (data.dateOfBirth && data.dateOfBirth !== "") ? data.dateOfBirth : "N/A",
-            averageRisk: (data.averageRisk != null && !isNaN(data.averageRisk)) ? data.averageRisk : 0,
-            questionnaireAverageRisk: (data.questionnaireAverageRisk != null && !isNaN(data.questionnaireAverageRisk)) ? data.questionnaireAverageRisk : 0,
-            voiceAverageRisk: (data.voiceAverageRisk != null && !isNaN(data.voiceAverageRisk)) ? data.voiceAverageRisk : 0,
         };
     };
 
     useEffect(() => {
-        const fetchPatients = async () => {
+        const fetchDoctors = async () => {
             try {      
                 if (!user) throw new Error("User not logged in");
                 const token = await user.getIdToken();
 
-                const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/patients/`, {
+                const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/doctors/`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -50,17 +47,17 @@ const Welcome = () => {
                 if (!response.ok) throw new Error("Failed to fetch patients");
 
                 const data = await response.json();
-                const cleanData = (data || []).map(validatePatient);
-                setPatients(cleanData);
+                const cleanData = (data || []).map(validateDoctor);
+                setDoctors(cleanData);
                 }
                 catch (err) {
-                console.error("Error fetching patients:", err);
+                console.error("Error fetching Doctors:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPatients();
+        fetchDoctors();
         }, []);
 
     return(
@@ -72,7 +69,7 @@ const Welcome = () => {
                 </div>
         </div>
         <div className="header">
-            <div className="text">Welcome Dr. {lastName}</div>
+            <div className="text">Welcome</div>
         </div>
     <div className="backdrop">
         <div className="table-container">
@@ -82,40 +79,33 @@ const Welcome = () => {
                     <tr>
                         <th>Name</th>
                         <th>Date of Birth</th>
-                        <th>Average Risk</th>
-                        <th>Questionnaire Average risk</th>
-                        <th>Speech Average risk</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {patients.map((patient) => (
-                        <tr key={patient.id}>
+                    {doctors.map((doctor) => (
+                        <tr key={doctor.id}>
                             <td>
-                                <Link to="/dashboard" state={{ patient }} className="patient-link">
-                                    {`${patient.lastName}, ${patient.firstName}`}
+                                <Link to="/dashboard" state={{ doctor }} className="patient-link">
+                                    {`${doctor.lastName}, ${doctor.firstName}`}
                                 </Link>
                             </td>
-                            <td>{patient.dateOfBirth}</td>
-                            <td>{patient.averageRisk*100}%</td>
-                            <td>{patient.questionnaireAverageRisk*100}%</td>
-                            <td>{patient.voiceAverageRisk*100}%</td>
+                            <td>{doctor.dateOfBirth}</td>
                               <td className="action-button">
-                                <Link to="/update-patients" state={{ patient }} className="update-btn">Update</Link>
-                                <button className="delete-btn" onClick={() => handleDelete(patient.uid)}>Delete</button>
+                                <Link to="/update-patients" state={{ doctor }} className="update-btn">Update</Link>
+                                <button className="delete-btn" onClick={() => handleDelete(doctor.uid)}>Delete</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-        </div>
-        <div className="welcome-buttons">
-            <Link to="/news" className="welcome-btn">News</Link>
-            <Link to="/data" className="welcome-btn">Data Aggregation</Link>
-        </div>
-    </div>
+            </div>
+                    <div className="welcome-buttons">
+                        <Link to="/data" className="welcome-btn">Data Aggregation</Link>
+                    </div>
+                </div>
     </>
     );
 }
 
-export default Welcome
+export default AdminWelcome

@@ -7,12 +7,41 @@ import dementia_logo from '../Assets/dementia logo.png'
 import { Link, useNavigate } from 'react-router-dom';
 import { loginWithEmail } from "../../utils/logInWithEmail";
 import { updateProfile } from "firebase/auth";
+import { logInWithGoogle } from "../../utils/logInWithGoogle";
+
+
+
 
 const LogIn = () => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const handleGoogleLogin = async () => {
+        try {
+            const user = await logInWithGoogle();
+            const token = await user.getIdToken();
+
+            const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile/`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+            if (!response.ok) {
+                throw new Error("Failed to load user profile");
+            }
+
+            navigate("/patients");
+        } catch (error) {
+            console.error("Google login failed:", error);
+            alert("Google login failed. Please try again.");
+        }
+    };
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -75,7 +104,17 @@ const LogIn = () => {
         </div>
         
 
-        <div className="submit" onClick={handleLogin}>Log In</div>
+        <div className="button-row">
+            <div className="submit" onClick={handleLogin}>Log In</div>
+
+            <button className="google-signin" onClick={handleGoogleLogin}>
+                <img src="https://img.icons8.com/color/16/000000/google-logo.png"
+                alt="Google Logo"
+                className="google-logo"
+                />
+                Sign in with Google
+                </button>
+            </div>
 
       </div>
     </>

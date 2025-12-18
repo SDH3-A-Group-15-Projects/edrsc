@@ -40,10 +40,10 @@ const AdminSignUp = () => {
 
       <div className='container'>
         <div className="header">
-          <div className="text">Create an Account</div>
+          <div className="text">Create an Admin Account</div>
           <div className="underline"></div>
           <div className='signInLink'>
-            Already have an account? <Link to='/login'>Sign in</Link>
+            Already have an account? <Link to='/admin/login'>Sign in</Link>
           </div>
         </div>
 

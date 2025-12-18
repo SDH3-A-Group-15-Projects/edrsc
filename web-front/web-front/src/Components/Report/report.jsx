@@ -4,12 +4,43 @@ import "./report.css";
 import { db } from "../../index";
 import { collection, getDocs } from "firebase/firestore";
 import jsPDF from "jspdf";
+import { useNavigate } from "react-router-dom";
+
 
 const Reports = () => {
     const [patients, setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState("");
     const [reportList, setReportList] = useState([]);
+    const navigate = useNavigate();
+    const [paymentVerified, setPaymentVerified] = useState(false);
 
+    useEffect(() => {
+        const verifyPayment = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/api/web/payment/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ patientId: 'GLOBAL_REPORT_ACCESS', }),
+                });
+
+            const data = await response.json();
+
+            if (data.paid) {
+                setPaymentVerified(true);
+            } else {
+                navigate('/risk-dashboard');
+            }
+        } catch (error) {
+            console.error("Payment verification error:", error);
+            navigate('/risk-dashboard');
+        }
+    };
+
+        verifyPayment();
+    }, [navigate]);
+            
     // Load patient data
     useEffect(() => {
         const fetchPatients = async () => {
@@ -77,6 +108,10 @@ const Reports = () => {
         doc.save(`report_${report.name}.pdf`);
     };
 
+    if ( !paymentVerified ) {
+            return null;
+        }
+        
     return (
         <>
             <div className="top-right-container">

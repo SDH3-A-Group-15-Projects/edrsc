@@ -124,14 +124,17 @@ const SignUp = () => {
             <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}/>
           </div>
         </div>
-          <div className="submit" onClick={handleSignUp}>Sign Up</div>
-        </div>
-        <div>
+        <div className="button-row">
+          <div className="submit" onClick={handleSignUp}>
+            Sign Up
+          </div>
+
           <button onClick={handleGoogleSignUp} className="google-signin">
-            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" className="google-logo"/>
-            Sign in with Google
+            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo" className="google-logo"/>
+            Sign Up with Google
           </button>
         </div>
+      </div>
     </>
   )
 }
