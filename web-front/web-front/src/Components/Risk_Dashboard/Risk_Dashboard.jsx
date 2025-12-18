@@ -7,7 +7,6 @@ const Risk_Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const patient = location.state?.patient;
-    const doctor = location.state?.doctor;
 
     const handleGoToReport = async () => {
         try {
@@ -19,7 +18,7 @@ const Risk_Dashboard = () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        doctorId: doctor.id,
+                        patientId: patient.uid,
                 }),
     });
 
@@ -55,7 +54,7 @@ const Risk_Dashboard = () => {
                     <thead>
                         <tr>
                         <th colSpan="2" className="patient-name">
-                    <p>{patient.name}</p>
+                    <p>{patient.firstName} {patient.lastName}</p>
                         </th>
                         </tr>
                     </thead>
