@@ -16,4 +16,4 @@ expressApp.use('/api/web/users', webUserRoutes);
 expressApp.use('/api/app/users', appUserRoutes);
 expressApp.use('/api/admin/', adminRoutes);
 
-expressApp.listen(port, console.log(`Express app listening on ${port}`));
+expressApp.listen(port, '0.0.0.0', () => console.log(`Express app listening on ${port}`));
