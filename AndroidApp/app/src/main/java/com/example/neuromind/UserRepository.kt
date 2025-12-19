@@ -1,5 +1,6 @@
 package com.example.neuromind
 
+import android.R.attr.data
 import com.example.neuromind.RetrofitClient
 import com.example.neuromind.RetrofitClient.apiService
 
@@ -22,6 +23,32 @@ class UserRepository() {
     suspend fun submitQuestionnaire(uid: String, data: Questionnaire) : Result<QuestionnaireResponse> {
         return try {
             val response = apiService.submitQuestionnaire(uid, data)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Error: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun submitRating(uid: String, data: Rating) : Result<Rating> {
+        return try {
+            val response = apiService.submitRating(uid, data)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Error: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun submitSupportRequest(uid: String, data: SupportRequest) : Result<SupportRequestResponse> {
+        return try {
+            val response = apiService.submitSupportRequest(uid, data)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {

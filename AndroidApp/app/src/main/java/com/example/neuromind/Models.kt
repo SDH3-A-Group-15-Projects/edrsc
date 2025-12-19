@@ -24,6 +24,19 @@ data class QuestionnaireResponse(
     val id: String
 )
 
+data class Rating(
+    val rating: Int,
+    val review: String
+)
+
+data class SupportRequest(
+    val message: String
+)
+
+data class SupportRequestResponse(
+    val id: String
+)
+
 data class PredictionRequest(
     val age: Double,
     val sleep_hours: Double,

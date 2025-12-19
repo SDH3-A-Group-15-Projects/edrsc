@@ -1,5 +1,6 @@
 package com.example.neuromind
 
+import android.R.attr.rating
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -112,7 +113,10 @@ class MainActivity : ComponentActivity() {
 
             composable("app_review") {
                 AppReviewScreen(
-                    onBack = { navController.popBackStack() }
+                    onBack = {navController.navigate("dashboard/${android.net.Uri.encode(username)}")},
+                    onSubmit = { rating, review ->
+                        userViewModel.submitRating(FirebaseAuth.getInstance().uid ?: "", rating, review, {Log.i("rating", "Result: $it")})
+                    }
                 )
             }
 
@@ -139,7 +143,10 @@ class MainActivity : ComponentActivity() {
 
             composable("contact_support") {
                 ContactSupportScreen(
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
+                    onSubmit = { message ->
+                        userViewModel.submitSupportRequest(FirebaseAuth.getInstance().uid ?: "", message, {Log.i("support", "Result: $it")})
+                    }
                 )
             }
 
@@ -148,7 +155,7 @@ class MainActivity : ComponentActivity() {
                     overall = lastOverallRiskScore,
                     questionnaire = lastQuestionnaireRiskScore,
                     voice = lastVoiceRiskScore,
-                    onBack = {navController.navigate("dashboard/${android.net.Uri.encode(username)}")},
+                    onBack = {navController.navigate("app_review")},
                     onContactSupport = {navController.navigate("contact_support")}
                 )
             }

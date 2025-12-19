@@ -69,7 +69,7 @@ class AppUserModel extends UserModel {
   }
 
   static async updateUserResults(uid, results) {
-    const userResultsRef = db.ref(`${this._dbRef}/${uid}`);
+    const userResultsRef = db.ref(`${this._dbRef}/${uid}/results`);
     await userResultsRef.update(results);
     const snapshot = await userResultsRef.once('value');
     if (snapshot.exists()) return snapshot.val();

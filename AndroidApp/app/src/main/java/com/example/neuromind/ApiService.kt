@@ -45,6 +45,17 @@ interface ApiService {
         @Body data: Questionnaire
     ): Response<QuestionnaireResponse>
 
+    @POST("/api/app/users/{uid}/rating/")
+    suspend fun submitRating(
+        @Path("uid") uid: String,
+        @Body data: Rating
+    ): Response<Rating>
+
+    @POST("/api/support/{uid}")
+    suspend fun submitSupportRequest(
+        @Path("uid") uid: String,
+        @Body data: SupportRequest
+    ): Response<SupportRequestResponse>
 
 }
 data class SpeechAnalysisResponse(
