@@ -24,7 +24,7 @@ const AdminWelcome = () => {
     const validateDoctor = (data) => {
         return {
             uid: data.uid,
-            checked: false,     // Track if checked in UI
+            checked: false,    
             firstName: (data.firstName && data.firstName !== "") ? data.firstName : "N/A",
             lastName: (data.lastName && data.lastName !== "") ? data.lastName : "N/A",
             dateOfBirth: (data.dateOfBirth && data.dateOfBirth !== "") ? data.dateOfBirth : "N/A",

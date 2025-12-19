@@ -12,36 +12,63 @@ const Risk_Dashboard = () => {
     const patientFromStorage = localStorage.getItem("selectedPatient");
     let initialPatient = location.state?.patient || (patientFromStorage ? JSON.parse(patientFromStorage) : null);
     const [patient, setPatient] = useState(initialPatient);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-  if (!patient || !patient.uid) {
-    alert("No patient selected. Redirecting to Welcome page.");
-    navigate("/welcome");
-  }
-}, [patient, navigate]);
+        if (!patient || !patient.uid) {
+            alert("No patient selected. Redirecting to Welcome page.");
+            navigate("/welcome");
+        }
+    }, [patient, navigate]);
 
     const handleGoToReport = async () => {
-  try {
-    const response = await fetch(
-      "http://localhost:3001/api/web/payments/create-checkout-session",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ patientId: patient.uid }),
-      }
-    );
+        if (!patient || !patient.uid) {
+            alert("No patient data available");
+            return;
+        }
 
-    const data = await response.json();
+        setLoading(true);
 
-    if (!response.ok) throw new Error(data.error || "Payment failed");
-    window.location.assign(data.url); 
-  } catch (err) {
-    console.error("Payment error:", err);
-    alert(err.message || "Payment failed");
-  }
-};
+        try {
 
+            const checkResponse = await fetch(
+                `http://localhost:3001/api/web/payments/check/${patient.uid}`
+            );
+            const checkData = await checkResponse.json();
 
+            if (checkData.paid) {
+
+                const reportResponse = await fetch(
+                    `http://localhost:3001/api/report/patient/${patient.uid}`
+                );
+                
+                if (!reportResponse.ok) throw new Error("Failed to fetch report");
+                
+                const patientData = await reportResponse.json();
+                navigate("/report", { state: { patient: patientData } });
+                return;
+            }
+
+            const response = await fetch(
+                "http://localhost:3001/api/web/payments/create-checkout-session",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ patientId: patient.uid }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.error || "Payment failed");
+            
+            window.location.assign(data.url);
+        } catch (err) {
+            console.error("Error:", err);
+            alert(err.message || "Failed to process request");
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -95,8 +122,12 @@ const Risk_Dashboard = () => {
                                         for cognitive decline
                                     </p>
                                     <div className="report-button-wrapper">
-                                        <button className="report-button" onClick={handleGoToReport}>
-                                            Go to Report
+                                        <button 
+                                            className="report-button" 
+                                            onClick={handleGoToReport}
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Processing..." : "Go to Report"}
                                         </button>
                                     </div>
                                 </div>

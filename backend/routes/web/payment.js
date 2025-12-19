@@ -1,13 +1,19 @@
 import express from 'express';
 import {
     createCheckoutSession,
-    stripeWebhook,
+    checkPayment,
+    verifyPayment,
 } from '../../controllers/paymentController.js';
-import stripe from '../../utils/stripe.js';
 
 const router = express.Router();
 
+
 router.post('/create-checkout-session', createCheckoutSession);
-router.post('/stripe-webhook', express.raw({type: 'application/json'}), stripeWebhook);
+
+router.get('/check/:patientId', checkPayment);
+
+
+router.get('/verify/:patientId', verifyPayment);
+
 
 export default router;
