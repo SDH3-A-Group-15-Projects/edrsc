@@ -145,3 +145,51 @@
     transform: translateY(-2px);
 }
 
+
+.action-button {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+
+.update-btn,
+.delete-btn {
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: none;
+}
+
+
+.update-btn {
+    background-color: #2563eb;
+    color: white;
+}
+
+.update-btn:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.delete-btn {
+    background-color: #dc2626;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
+
+.update-btn:focus,
+.delete-btn:focus {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}

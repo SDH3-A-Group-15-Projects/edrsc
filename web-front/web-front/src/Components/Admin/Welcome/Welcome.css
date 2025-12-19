@@ -1,147 +1,47 @@
-.top-right-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+.action-button {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     gap: 10px;
-}
-
-.header {
-  display: flex;
-  justify-content: center;
-  margin-top: 100px;
-  margin-bottom: 30px;
-}
-
-.text {
-  color: #344862;
-  font-size: 48px;
-  font-weight: 700;
-  width: 300px;
-  text-align: center;
-}
-
-
-.logo {
-    font-size: x-large;
-    text-align: end;
-    mix-blend-mode:unset;
-}
-
-.title {
-  text-align: end;
-  top: 0px;
-  right: 0px;
-  color: #fff;
-  font-size: x-large;
-}
-
-.submit-container {
-    display: flex;
-    gap: 30px;
-    margin: 60px auto;
-}
-
-.submit {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    width: 220px;
-    height: 59px;
-    color: #fff;
-    background: #344862;
-    border-radius: 50px;
-    font-size: 19px;
-    font-weight: 700;
-    cursor: pointer;
 }
 
-.backdrop {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    box-sizing: border-box;
-    gap: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
 
-.submit-container {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.submit {
-    background-color: #007bff;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.table-container {
-  margin: 2rem auto;
-  width: 80%;
-  text-align: center;
-}
-
-.patient-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px0px rgba(0, 0, 0, 0.1);
-}
-
-.patient-table th,
-.patient-table td {
-  border: 1px solid #ddd;
-  padding: 12px 16px;
-}
-
-.patient-table th {
-  background-color: #004080;
-  color: white;
-  font-weight: bold;
-}
-
-.patient-table tr:hover {
-  background-color: #f1f7ff;
-}
-
-.patient-link {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.patient-link:hover {
-  text-decoration: none;
-}
-.welcome-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.welcome-btn {
-    background-color: #4b79a1;
-    color: white;
-    padding: 10px 22px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 16px;
+.update-btn,
+.delete-btn {
+    padding: 6px 14px;
+    font-size: 14px;
     font-weight: 600;
-    transition: 0.2s ease-in-out;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: none;
 }
 
-.welcome-btn:hover {
-    background-color: #35516b;
-    transform: translateY(-2px);
+.update-btn {
+    background-color: #2563eb; 
+    color: white;
 }
 
+.update-btn:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+
+.delete-btn {
+    background-color: #dc2626; 
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+}
+
+.update-btn:focus,
+.delete-btn:focus {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
