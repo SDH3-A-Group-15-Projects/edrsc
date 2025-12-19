@@ -20,6 +20,7 @@ const upload = multer({
 });
 
 const handleAudioUpload = (req, res, next) => {
+    console.log("Handling audio upload middleware");
     upload.single('audioFile')(req, res, (err) => {
         if (err instanceof multer.MulterError) {
             console.trace();

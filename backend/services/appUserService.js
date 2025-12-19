@@ -23,6 +23,11 @@ class AppUserService extends UserService {
         return patient.profile;
     }
 
+        static async getUser(uid) {
+        const patient = await super.getUserProfile(AppUserModel, uid);
+        return patient;
+    }
+
     static async updateUserProfile(uid, firstName, lastName, email, dateOfBirth) {
         return await super.updateUserProfile(AppUserModel, uid, firstName, lastName, email, dateOfBirth);
     }
@@ -36,8 +41,10 @@ class AppUserService extends UserService {
     }
 
     static async recalculateAvgRisk(uid) {
-        let profile = await this.getUserProfile(uid);
+        let profile = await this.getUser(uid);
         let results = profile.results;
+        console.log(results);
+        console.log(profile);
 
         let qRisk = 0;
         let qCount = 0;
@@ -45,13 +52,13 @@ class AppUserService extends UserService {
         let vCount = 0;
         let avgRisk = 0;
 
-        for (q of results.questionnaire) {
-            qRisk += q.calculatedRisk;
+        for (const q of Object.values(results.questionnaire)) {
+            qRisk += q.calculatedRisk || 0;
             qCount++;
         }
 
-        for (v of results.voice) {
-            vRisk += v.calculatedRisk;
+        for (const v of Object.values(results.voice)) {
+            vRisk += v.calculatedRisk || 0;
             vCount++;
         }
 
@@ -67,7 +74,7 @@ class AppUserService extends UserService {
     }
 
     static async submitQuestionnaire(uid, questionnaire) {
-        await fetch("http://localhost:3002/questionnaire", {
+        /*await fetch("http://localhost:3002/questionnaire", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -76,32 +83,46 @@ class AppUserService extends UserService {
         })
         .then(response => response.json())
         .then(data => questionnaire.calculatedRisk = data.calculatedRisk)
-        .catch(error => console.error("Error:", error));
+        .catch(error => console.error("Error:", error));*/
 
         questionnaire.completionDate = new Date().toISOString();
         questionnaire = await AppUserModel.submitQuestionnaire(uid, questionnaire);
-
         if (questionnaire) {
+            return questionnaire.id;
+        } else return null;
+
+        /*if (questionnaire) {
             const newResults = await this.recalculateAvgRisk(uid);
             // If this does not return null
             if (await this.updateUserResults(uid, newResults)) return questionnaire;
             else return null;
-        } else return null;
+        } else return null;*/
     }
 
-    static async submitVoice(uid, voice) {
+    static async submitVoice(uid, id, voice) {
         try {
+            console.log("Submitting voice for user:", uid, "and questionnaire ID:", id);
             let voiceResult = {
                 calculatedRisk: 0,
-                completionDate: ""
+                completionDate: new Date().toISOString()
+            };
+
+            const questionnaire = await AppUserModel.getQuestionnaireById(uid, id);
+            if (!questionnaire) {
+                console.error("Questionnaire not found for voice submission.");
+                return null;
             }
 
+            const voiceBlob = new Blob([voice.buffer], { type: voice.mimetype });
+
             const form = new FormData();
-            form.append("audioFile", voice.buffer, {
+            form.append("audioFile", voiceBlob, {
                 filename: voice.originalname,
                 contentType: voice.mimetype
             });
+            form.append("questionnaire", JSON.stringify(questionnaire));
 
+            /*
             await fetch("http://localhost:3002/voice", {
                 method: "POST",
                 headers: {
@@ -111,20 +132,31 @@ class AppUserService extends UserService {
                 
             })
             .then(response => response.json())
-            .then(data => voice.calculatedRisk = data.calculatedRisk)
-            .catch(error => console.error("Error:", error));
-
-            voice.completionDate = new Date().toISOString();
+            .then(data => {
+                voiceResult.calculatedRisk = data.voiceCalculatedRisk;
+                questionnaire.calculatedRisk = data.questionnaireCalculatedRisk;
+            })
+            .catch(error => console.error("Error:", error));*/
+            voiceResult.calculatedRisk = 50.0; // Placeholder value
+            questionnaire.calculatedRisk = 50.0; // Placeholder value
+            const testResult = {
+                questionnaireRisk: questionnaire.calculatedRisk / 100.0,
+                voiceRisk: voiceResult.calculatedRisk / 100.0,
+                overallRisk: (questionnaire.calculatedRisk + voiceResult.calculatedRisk) / 200.0
+            };
             voiceResult = await AppUserModel.submitVoice(uid, voiceResult);
 
             if (voiceResult) {
                 const newResults = await this.recalculateAvgRisk(uid);
                 // If this does not return null
-                if (await this.updateUserResults(uid, newResults)) return voiceResult;
-                else return null;
+                if (!await this.updateUserResults(uid, newResults)) {
+                    console.error("Failed to update results, returning current result.");
+                };
+                return testResult;
             } else return null;
         }
         catch (e) {
+            console.error("Error in submitVoice:", e);
             return null;
         }
     }
@@ -140,6 +172,11 @@ class AppUserService extends UserService {
         .catch(error => console.error("Error:", error));
 
         await AppUserModel.submitRiskFactors(uid, riskFactors);
+    }
+
+    static async submitAppRating(uid, rating, review) {
+        if (await AppUserModel.submitAppRating(uid, rating, review)) return rating;
+        else return null;
     }
 }
 

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "673535448187",
+    "firebase_url": "https://neuromind-system-g15-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "neuromind-system-g15",
+    "storage_bucket": "neuromind-system-g15.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673535448187:android:a7c300d95f742a82297ede",
+        "android_client_info": {
+          "package_name": "com.example.neuromind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673535448187-sgatn0kmp01o2ggcr6kebpj7k90nljmb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.neuromind",
+            "certificate_hash": "c34d92f470de1022d5d6afb4d506d7fc60e6da6d"
+          }
+        },
+        {
+          "client_id": "673535448187-jhon5bggkdbgn4iloc1stp83nu41ga31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIbSUJo-ywxIYxk-wt9HXsGjTKpBcsYnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673535448187-jhon5bggkdbgn4iloc1stp83nu41ga31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

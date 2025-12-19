@@ -114,6 +114,7 @@ const Welcome = () => {
             <Link to="/news" className="welcome-btn">News</Link>
             <Link to="/data" className="welcome-btn">Data Aggregation</Link>
         </div>
+
     </div>
     </>
     );

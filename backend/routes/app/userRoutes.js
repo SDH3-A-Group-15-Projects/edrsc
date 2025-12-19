@@ -158,7 +158,7 @@ router.post('/:uid/results/questionnaire', authenticateToken, AppUserController.
  * On Failure: 400 "All questions must be answered."
  * 500 "No response from API"
  */
-router.post('/:uid/results/voice', authenticateToken, handleAudioUpload, AppUserController.submitVoice);
+router.post('/:uid/results/voice/:id', handleAudioUpload, authenticateToken, AppUserController.submitVoice);
 
 /**
  * Submit Risk Factors
@@ -185,6 +185,8 @@ router.post('/:uid/results/voice', authenticateToken, handleAudioUpload, AppUser
  * 500 "No response from API"
  */
 router.post('/:uid/results/riskfactors', authenticateToken, AppUserController.submitRiskFactors);
+
+router.post('/:uid/rating/', authenticateToken, AppUserController.submitAppRating);
 
 /**
  * Submit Form Data

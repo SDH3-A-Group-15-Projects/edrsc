@@ -8,6 +8,8 @@ import adminRoutes from './routes/admin/adminRoutes.js';
 import paymentRoutes from './routes/web/payment.js';
 import { stripeWebhook } from './controllers/paymentController.js';
 import reportRoutes from './routes/web/report.js'
+// import aiUserRoutes from './routes/ai/userRoutes.js';
+import supportRoutes from './routes/support/supportRoutes.js';
 
 const expressApp = express();
 const port = process.env.PORT || 3001;
@@ -27,5 +29,6 @@ expressApp.use('/api/app/users', appUserRoutes);
 expressApp.use('/api/admin/', adminRoutes);
 expressApp.use('/api/web/payments', paymentRoutes);
 expressApp.use('/api/report', reportRoutes);
+expressApp.use('/api/support/', supportRoutes);
 
-expressApp.listen(port, console.log(`Express app listening on ${port}`));
+expressApp.listen(port, '0.0.0.0', () => console.log(`Express app listening on ${port}`));
