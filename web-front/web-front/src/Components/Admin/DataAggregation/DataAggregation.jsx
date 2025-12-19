@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from "react"
-import * as XLSX from 'xlsx'
-import "./DataAggregation.css"
+import React, { useEffect, useState } from "react";
+import * as XLSX from 'xlsx';
+import "./DataAggregation.css";
 import { auth } from "../../../utils/firebaseAdminConfig.js";
 
 const DataAggregation = () => {
-    const [uploadedData, setUploadedData] = useState([]);
     const [exportData, setExportData] = useState([]);
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const user = auth.currentUser;
-
-    const sampleTrainingData = [
-        { id: 1, age: 72, gender: "F", memoryScore: 42, speechRate: 1.2 },
-        { id: 2, age: 68, gender: "M", memoryScore: 57, speechRate: 1.7 },
-        { id: 3, age: 75, gender: "F", memoryScore: 36, speechRate: 1.1 },
-    ];
 
     useEffect(() => {
         const fetchExportData = async () => {
@@ -34,15 +27,10 @@ const DataAggregation = () => {
                     return;
                 } else if (!response.ok) throw new Error("Failed to fetch export data");
                 const data = await response.json();
-                const cleanData = (data || []);
-                if (cleanData.length === 0) {
-                    setExportData([]);
-                    return;
-                }
-                setExportData(cleanData);
-                console.log(cleanData)
+                setExportData(data || []);
+                console.log(data);
             } catch (err) {
-            console.error("Error fetching export data:", err);
+                console.error("Error fetching export data:", err);
             } finally {
                 setLoading(false);
             }
@@ -69,8 +57,7 @@ const DataAggregation = () => {
                 const data = await response.json();
                 setDoctors(data);
                 console.log(data);
-                }
-                catch (err) {
+            } catch (err) {
                 console.error("Error fetching doctors:", err);
             } finally {
                 setLoading(false);
@@ -78,123 +65,60 @@ const DataAggregation = () => {
         };
 
         fetchDoctors();
-        }, []);
+    }, []);
 
     const exportToExcel = () => {
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(exportData);
-        XLSX.utils.book_append_sheet(wb,ws, "TrainingData");
+        XLSX.utils.book_append_sheet(wb, ws, "TrainingData");
         XLSX.writeFile(wb, "anonymised_training_dataset.xlsx");
-    };
-
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = (evt) => {
-            const data = evt.target.result;
-            const workbook = XLSX.read(data, {type: "binary" });
-
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-
-            const json = XLSX.utils.sheet_to_json(sheet);
-
-            setUploadedData(json);
-        };
-
-        reader.readAsBinaryString(file);
     };
 
     return (
         <div className="aggregation-container">
 
-        <div className="header">
-            <div className="text">ML Data Aggregation</div>
-        </div>
-
-        <div className="backdrop">
-            <div className="table-container">
-                <h2>Doctor Profiles</h2>
-                <table className="doctor-table">
-                    <thead>
-                        <tr>
-                            <th>UID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>No. of Patients</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {doctors.map((doctor) => (
-                            <tr key={doctor.uid}>
-                                <td>{doctor.uid}</td>
-                                <td>{doctor.firstName}</td>
-                                <td>{doctor.lastName}</td>
-                                <td>{doctor.noOfPatients}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="header">
+                <div className="text">ML Data Aggregation</div>
             </div>
 
-            <div className="report-filter-panel">
-                <h3>Download Current Dataset</h3>
-                <p>Export anonymised training data.</p>
+            <div className="backdrop">
 
-                <button className="generate-btn" onClick={exportToExcel}>
-                    Download Excel (.xlsx)
-                </button>
-            </div>
-
-            <div className="report-filter-panel">
-                <h2>Upload New Data</h2>
-                <p>Upload anonymised Excel data to extend the model dataset.</p>
-
-                <input 
-                    type="file"
-                    accept=".xlsx, .xls"
-                    onChange={handleFileUpload}
-                    className="upload-input"/>
-            </div>
-
-            <div className="table-container">
-                <h2>Uploaded Data Preview</h2>
-                    <table className="report-table">
+                <div className="table-container">
+                    <h2>Doctor Profiles</h2>
+                    <table className="doctor-table">
                         <thead>
-                            {uploadedData.length > 0 && (
                             <tr>
-                                {Object.keys(uploadedData[0]).map((col) => (
-                                    <th key={col}>{col}</th>
-    
-                            ))}
+                                <th>UID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>No. of Patients</th>
                             </tr>
-                            )}
                         </thead>
-
                         <tbody>
-                            {uploadedData.length == 0 ? (
-                                <tr>
-                                    <td colSpan="10" style={{ textAlign: "center"}}>
-                                        No data uploaded yet.
-                                    </td>
+                            {doctors.map((doctor) => (
+                                <tr key={doctor.uid}>
+                                    <td>{doctor.uid}</td>
+                                    <td>{doctor.firstName}</td>
+                                    <td>{doctor.lastName}</td>
+                                    <td>{doctor.noOfPatients}</td>
                                 </tr>
-                            ) : (
-                                uploadedData.map((row, index) => (
-                                    <tr key={index}>
-                                        {Object.values(row).map((val, i) => (
-                                            <td key={i}>{val}</td>
-                                        ))}
-                                    </tr>
-                                ))
-                            )}
+                            ))}
                         </tbody>
                     </table>
                 </div>
+
+                <div className="report-filter-panel">
+                    <h3>Download Current Dataset</h3>
+                    <p>Export anonymised training data.</p>
+
+                    <button className="generate-btn" onClick={exportToExcel}>
+                        Download Excel (.xlsx)
+                    </button>
+                </div>
+
             </div>
         </div>
     );
 };
-export default DataAggregation
+
+export default DataAggregation;

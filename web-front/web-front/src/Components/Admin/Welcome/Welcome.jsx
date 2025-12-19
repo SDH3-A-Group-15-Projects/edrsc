@@ -28,6 +28,7 @@ const AdminWelcome = () => {
             firstName: (data.firstName && data.firstName !== "") ? data.firstName : "N/A",
             lastName: (data.lastName && data.lastName !== "") ? data.lastName : "N/A",
             dateOfBirth: (data.dateOfBirth && data.dateOfBirth !== "") ? data.dateOfBirth : "N/A",
+            noOfPatients: data.noOfPatients != null ? d
         };
     };
 
