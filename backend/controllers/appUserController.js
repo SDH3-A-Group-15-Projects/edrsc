@@ -22,12 +22,12 @@ class AppUserController extends UserController {
         try {
             const questionnaire = req.body;
 
-            for (q in questionnaire) {
+            for (const q in questionnaire) {
                 if (questionnaire[q] == "") return res.status(400).send("All questions must be answered.");
             }
 
             const result = await AppUserService.submitQuestionnaire(req.user.uid, questionnaire);
-            if (result) res.status(201).json(result);
+            if (result) res.status(201).json({id: result});
             else res.status(500).send("No response from API");
         } catch (e) {
             console.error(e.message);
@@ -39,13 +39,15 @@ class AppUserController extends UserController {
     static async submitVoice(req, res) {
         try {
             const voice = req.file;
+            const id = req.params.id;
+            console.log("Received voice submission for user:", req.user.uid, "with file:", voice ? voice.originalname : "No file");
             if (!voice) {
                 const errMsg = "No Audio File Found after Upload";
                 console.error(errMsg);
                 console.trace();
                 return res.status(400).send(errMsg);
             }
-            const result = await AppUserService.submitVoice(req.user.uid, voice);
+            const result = await AppUserService.submitVoice(req.user.uid, id, voice);
             if (result) res.status(201).json(result);
             else res.status(500).send("No response from API");
         } catch (e) {
@@ -59,7 +61,7 @@ class AppUserController extends UserController {
         try {
             const riskFactors = req.body;
 
-            for (q in riskFactors) {
+            for (const q in riskFactors) {
                 if (!riskFactors[q]) return res.status(400).send("All risk factors must be answered.");
             }
 
@@ -73,7 +75,18 @@ class AppUserController extends UserController {
         }
     }
 
-    
+    static async submitAppRating(req, res) {
+        try {
+            const { rating, review } = req.body;
+            const result = await AppUserService.submitAppRating(req.user.uid, rating, review);
+            if (result) res.status(201).json(result);
+            else res.status(500).send("No response from API");
+        } catch (e) {
+            console.error(e.message);
+            console.trace();
+            res.status(500).send("No response from API");
+        }
+    }
 }
 
 export default AppUserController;
