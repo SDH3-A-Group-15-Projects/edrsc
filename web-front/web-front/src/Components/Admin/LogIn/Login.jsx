@@ -22,7 +22,7 @@ const AdminLogIn = () => {
         try {
             await loginWithEmail(email, password);
 
-            navigate("/admin/welcome");
+            navigate("/admin/data");
         } catch (error) {
             console.error("Login failed:", error);
             alert("Invalid email or password.")

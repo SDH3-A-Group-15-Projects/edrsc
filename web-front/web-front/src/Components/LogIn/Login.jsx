@@ -91,6 +91,9 @@ const LogIn = () => {
                 <div className='signUpLink'>
                 Need an Account? <Link to="/">Sign up</Link>
                 </div>
+                <div className="resetLink">
+                    Reset your password? <Link to="/reset">Reset password</Link>
+                </div>
             </div>
             <div className="inputs">
                 <div className="input">

@@ -19,7 +19,7 @@ const AdminUnprotectedRoute = ({ children }) => {
     }
 
     if (loggedIn) {
-        return <Navigate to="/admin/welcome" replace />;
+        return <Navigate to="/admin/data" replace />;
     }
 
     return children;

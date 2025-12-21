@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import dementia_logo from '../../Assets/dementia logo.png';
 import './Welcome.css';
-import { auth } from "../../../index";
+import { auth } from "../../../firebaseConfig";
 import { Link } from "react-router-dom";
 
 const AdminWelcome = () => {

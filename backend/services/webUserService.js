@@ -96,7 +96,9 @@ class WebUserService extends UserService {
     }
 
     static async removePatient(uid, patientUID) {
-        return await WebUserModel.removePatient(uid, patientUID);
+        const removedId = await WebUserModel.removePatient(uid, patientUID);
+        this.addPatient(uid, patientUID);
+        return removedId;
     }
 
     static async generateReport(patientUID) {

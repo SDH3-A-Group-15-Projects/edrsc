@@ -5,13 +5,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import RiskDashboardChat from "../RiskDashboardChat/RiskDashboardChat";
 import { useEffect } from "react";
 import { useState } from "react";
+import { auth } from "../../firebaseConfig";
 
 const Risk_Dashboard = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const user = auth.currentUser;
     const patientFromStorage = localStorage.getItem("selectedPatient");
     let initialPatient = location.state?.patient || (patientFromStorage ? JSON.parse(patientFromStorage) : null);
     const [patient, setPatient] = useState(initialPatient);
+    const [supportRequests, setSupportRequests] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -20,6 +23,35 @@ const Risk_Dashboard = () => {
             navigate("/welcome");
         }
     }, [patient, navigate]);
+
+    useEffect(() => {
+        const fetchSupport= async () => {
+            try {      
+                if (!user) throw new Error("User not logged in");
+                const token = await user.getIdToken();
+
+                const response = await fetch(`http://localhost:3001/api/support/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch patients");
+
+                const data = await response.json();
+                const filteredData = data.filter(request => request.uid === patient.uid);
+                setSupportRequests(filteredData);
+                }
+                catch (err) {
+                console.error("Error fetching patients:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSupport();
+        }, []);  
 
     const handleGoToReport = async () => {
         if (!patient || !patient.uid) {
@@ -98,28 +130,23 @@ const Risk_Dashboard = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><strong>Memory</strong></td>
-                                            <td>60%</td>
+                                            <td><strong>Questionnaire</strong></td>
+                                            <td>{patient.questionnaireAverageRisk}%</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Attention</strong></td>
-                                            <td>50%</td>
+                                            <td><strong>Speech</strong></td>
+                                            <td>{patient.voiceAverageRisk}%</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Executive Function</strong></td>
-                                            <td>55%</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Processing Speed</strong></td>
-                                            <td>45%</td>
+                                            <td><strong>Average Risk</strong></td>
+                                            <td>{patient.averageRisk}%</td>
                                         </tr>
                                     </tbody>
                                 </table>
 
                                 <div className="patient-side-info">
                                     <p className="patient-details-text">
-                                        Scored a 50% in Assessment, Patient is at a medium risk
-                                        for cognitive decline
+                                        Scored a {patient.averageRisk}% in Assessment.
                                     </p>
                                     <div className="report-button-wrapper">
                                         <button 
@@ -132,6 +159,28 @@ const Risk_Dashboard = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="table-container">
+                            <h2>Patient Support Requests</h2>
+                            <table className="patient-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date Submitted</th>
+                                        <th>Status</th>
+                                        <th>Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {supportRequests.map((req) => (
+                                        <tr key={req.uid}>
+                                            <td>{new Date(req.dateSubmitted).toISOString()}</td>
+                                            <td>{req.status}</td>
+                                            <td>{req.message.message}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
 
                             <RiskDashboardChat patient={patient} />
                         </>

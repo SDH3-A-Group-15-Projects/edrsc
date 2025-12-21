@@ -17,7 +17,7 @@ const port = process.env.PORT || 3001;
 expressApp.use(cors());
 
 expressApp.post(
-    '/api/web/payments/stripe-webhook',
+    '/api/web/payments/webhook',
     express.raw({ type: "application/json"}),
     stripeWebhook
 );

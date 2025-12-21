@@ -28,7 +28,7 @@ class AdminService {
     }
 
     static async getAllRatings() {
-        const ratings = await AppUserModel.getAllAppRatings();
+        const ratings = await AppUserModel.getAllRatings();
         if (!ratings || ratings.length === 0) return null;
         return ratings;
     }

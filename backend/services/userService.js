@@ -1,7 +1,7 @@
 import { NameValidationError, EmailValidationError } from "../utils/errors.js";
 
 class UserService {
-    static validateUserProfileInputs(firstName, lastName, email) {
+    static validateUserProfileInputs(firstName, lastName) {
         const nameRegex = /^(?![- ])[a-z]*(?:[- ][a-z][a-z]*)*[^- ]$/im;
         const emailRegex = /^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/g // Source: https://regex101.com/r/lHs2R3/1
 
@@ -9,8 +9,6 @@ class UserService {
             throw new NameValidationError();
         } else if (!lastName || lastName.trim() === '' || !nameRegex.test(lastName)) {
             throw new NameValidationError();
-        } else if (!email || email.trim() === '' || !emailRegex.test(email)) {
-            throw new EmailValidationError();
         }
     }
 
@@ -39,9 +37,9 @@ class UserService {
         return await Model.getUserProfile(uid);
     }
 
-    static async updateUserProfile(Model, uid, firstName, lastName, email, dateOfBirth) {
+    static async updateUserProfile(Model, uid, firstName, lastName, dateOfBirth) {
         try {
-            this.validateUserProfileInputs(firstName, lastName, email);
+            this.validateUserProfileInputs(firstName, lastName);
         } catch (e) {
             throw e;
         }
@@ -49,7 +47,6 @@ class UserService {
         const profileDataUpdate = {
         firstName: firstName,
         lastName: lastName,
-        email: email,
         dateOfBirth: dateOfBirth,
         updatedAt: new Date().toISOString()
         };

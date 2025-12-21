@@ -6,9 +6,29 @@ import { auth } from "../../../utils/firebaseAdminConfig.js";
 const DataAggregation = () => {
     const [exportData, setExportData] = useState([]);
     const [doctors, setDoctors] = useState([]);
+    const [ratings, setRatings] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const user = auth.currentUser;
+
+    const flattenObject = (obj, parentKey = "", result = {}) => {
+        for (let key in obj) {
+            if (!obj.hasOwnProperty(key)) continue;
+
+            const newKey = parentKey ? `${parentKey}_${key}` : key;
+
+            if (
+                typeof obj[key] === "object" &&
+                obj[key] !== null &&
+                !Array.isArray(obj[key])
+            ) {
+                flattenObject(obj[key], newKey, result);
+            } else {
+                result[newKey] = obj[key];
+            }
+        }
+        return result;
+    };
 
     useEffect(() => {
         const fetchExportData = async () => {
@@ -36,8 +56,8 @@ const DataAggregation = () => {
             }
         };
 
-        fetchExportData();
-    }, []);
+        if (user) fetchExportData();
+    }, [user]);
 
     useEffect(() => {
         const fetchDoctors = async () => {
@@ -55,7 +75,7 @@ const DataAggregation = () => {
                 if (!response.ok) throw new Error("Failed to fetch doctors");
 
                 const data = await response.json();
-                setDoctors(data);
+                setDoctors(data || []);
                 console.log(data);
             } catch (err) {
                 console.error("Error fetching doctors:", err);
@@ -64,12 +84,44 @@ const DataAggregation = () => {
             }
         };
 
-        fetchDoctors();
-    }, []);
+        if (user) fetchDoctors();
+    }, [user]);
+
+    useEffect(() => {
+        const fetchRatings = async () => {
+            try {      
+                if (!user) throw new Error("User not logged in");
+                const token = await user.getIdToken();
+
+                const response = await fetch(`http://localhost:3001/api/admin/ratings/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) throw new Error("Failed to fetch ratings");
+
+                const data = await response.json();
+                setRatings(data || []);
+                console.log(data);
+            } catch (err) {
+                console.error("Error fetching ratings:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (user) fetchRatings();
+    }, [user]);
 
     const exportToExcel = () => {
+
+        const flattenedData = exportData.map((item) =>
+        flattenObject(item)
+    );
         const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(exportData);
+        const ws = XLSX.utils.json_to_sheet(flattenedData);
         XLSX.utils.book_append_sheet(wb, ws, "TrainingData");
         XLSX.writeFile(wb, "anonymised_training_dataset.xlsx");
     };
@@ -101,6 +153,26 @@ const DataAggregation = () => {
                                     <td>{doctor.firstName}</td>
                                     <td>{doctor.lastName}</td>
                                     <td>{doctor.noOfPatients}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="table-container">
+                    <h2>Ratings</h2>
+                    <table className="doctor-table">
+                        <thead>
+                            <tr>
+                                <th>Rating</th>
+                                <th>Review</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {ratings.map((rating) => (
+                                <tr key={rating.uid}>
+                                    <td>{rating.rating}</td>
+                                    <td>{rating.review}</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -1,17 +1,6 @@
 import SupportUserModel from "../models/supportModel.js";
 
 class SupportService {
-    static async exportAnonymisedData() {
-        const patients = await SupportUserModel.getAllUserProfiles();
-        if (!patients || patients.length === 0) return null;
-        return patients.map(p => {
-            p.dateOfBirth = p.profile.dateOfBirth;
-            delete p['uid'];
-            delete p['profile'];
-            return p;
-        });
-    }
-
     static async submitSupportRequest(uid, message) {
         const supportRequest =  {
             uid: uid,
@@ -25,7 +14,9 @@ class SupportService {
     }
 
     static async getAllSupportRequests() {
-        //return await SupportUserModel.getAllSupportRequests();
+        const reqs = await SupportUserModel.getAllSupportRequests();
+        console.log(reqs);
+        return reqs
     }
 
     /*static async getAllDoctors() {

@@ -1,40 +1,36 @@
 import React, { useState, useEffect } from "react";
-import dementia_logo from '../Assets/dementia logo.png'
-import './update.css'
+import dementia_logo from '../../Assets/dementia logo.png'
+import './Update.css'
 import { useLocation, useNavigate } from "react-router-dom";   
-import { auth } from "../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 
-const Update = () => {
+const AdminUpdate = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const user = auth.currentUser;
-    const patient = state?.patient;
+    const doctor = state?.doctor;
 
     const [formData, setFormData] = useState({
-        uid : "",
         firstName: "",
         lastName: "",
-        dateOfBirth: "",
     });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!patient) return;
+        if (!doctor) return;
 
         setFormData({
-            uid : patient.uid || "",
-            firstName: patient.firstName || "",
-            lastName: patient.lastName || "",
-            dateOfBirth: patient.dateOfBirth || "",
+            firstName: doctor.firstName || "",
+            lastName: doctor.lastName || "",
         });
-    }, [patient]);
+    }, [doctor]);
 
-    if (!patient) {
+    if (!doctor) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-                <p>No patient selected.</p>
+                <p>No doctor selected.</p>
             </div>
         );
     }
@@ -57,9 +53,8 @@ const Update = () => {
 
             const token = await user.getIdToken();
 
-            // The correct endpoint should be for APP users (patients), not web users
-            const url = `http://localhost:3001/api/app/users/${patient.uid}/profile`;
-            console.log("Updating patient at URL:", url);
+            const url = `http://localhost:3001/api/web/doctor`;
+            console.log("Updating doctor at URL:", url);
             console.log("Sending data:", formData);
 
             const response = await fetch(url, {
@@ -83,14 +78,14 @@ const Update = () => {
             console.log("Update successful:", result);
 
             // Clear localStorage to force refresh
-            localStorage.removeItem("selectedPatient");
+            localStorage.removeItem("selectedDoctor");
 
-            alert("Patient updated successfully!");
+            alert("Doctor updated successfully!");
             navigate("/welcome");
         } catch (error) {
-            console.error("Error updating patient:", error);
+            console.error("Error updating doctor:", error);
             setError(error.message);
-            alert(`Failed to update patient: ${error.message}`);
+            alert(`Failed to update doctor: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -106,7 +101,7 @@ const Update = () => {
             </div>
 
             <div className="update-container">
-                <h2>Update Patient</h2>
+                <h2>Update Doctor</h2>
 
                 {error && (
                     <div style={{
@@ -177,4 +172,4 @@ const Update = () => {
     );
 };
 
-export default Update;
+export default AdminUpdate;

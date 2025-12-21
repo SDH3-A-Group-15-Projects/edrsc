@@ -138,3 +138,19 @@
 .google-logo {
     margin-right: 10px;
 }
+.resetLink {
+    padding-right: 62px;
+    color: #fff;
+    margin-top: 12px;
+    font-size: 18px;
+}
+
+.resetLink a {
+    color: #6c63FF;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.resetLink a:hover {
+    text-decoration: underline;
+}

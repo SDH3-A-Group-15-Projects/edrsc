@@ -81,7 +81,7 @@ class WebUserController extends UserController {
             }
 
             const deletedUID = await WebUserService.removePatient(uid, patientUID);
-            if (deletedUID) return res.status(201).send(`Removed patient with UID ${removedUID}`);
+            if (deletedUID) return res.status(201).send(`Removed patient with UID ${deletedUID}`);
             else {
                 res.status(404).send("No patient found with UID " + patientUID);
             }

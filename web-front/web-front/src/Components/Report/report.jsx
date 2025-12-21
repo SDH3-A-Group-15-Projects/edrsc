@@ -19,9 +19,9 @@ const Reports = () => {
                 patientId: patientFromNav.profile.uid || "N/A",
                 name: `${patientFromNav.profile.firstName} ${patientFromNav.profile.lastName}`,
                 date: new Date().toLocaleDateString(),
-                aggregate: `${(agg * 100).toFixed(1)}%`,
-                questionnaire: `${((patientFromNav.results?.questionnaireAverageRisk || 0) * 100).toFixed(1)}%`,
-                voice: `${((patientFromNav.results?.voiceAverageRisk || 0) * 100).toFixed(1)}%`,
+                aggregate: `${(agg ).toFixed(1)}%`,
+                questionnaire: `${((patientFromNav.results?.questionnaireAverageRisk || 0)).toFixed(1)}%`,
+                voice: `${((patientFromNav.results?.voiceAverageRisk || 0)).toFixed(1)}%`,
                 riskLevel:
                     agg > 0.7 ? "High" :
                     agg > 0.4 ? "Medium" : "Low",
