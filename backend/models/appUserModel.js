@@ -69,7 +69,7 @@ class AppUserModel extends UserModel {
   }
 
   static async updateUserResults(uid, results) {
-    const userResultsRef = db.ref(`${this._dbRef}/${uid}`);
+    const userResultsRef = db.ref(`${this._dbRef}/${uid}/results`);
     await userResultsRef.update(results);
     const snapshot = await userResultsRef.once('value');
     if (snapshot.exists()) return snapshot.val();
@@ -102,6 +102,16 @@ class AppUserModel extends UserModel {
       const snapshot = await questionnaireRef.once('value');
       if (snapshot.exists()) return snapshot.val();
       else return null;
+    } catch (e) {
+      console.error(`Error getting questionnaire ${id}:`, e.message);
+      return null;
+    }
+  }
+
+    static async deleteQuestionnaireById(uid, id) {
+    try {
+      const questionnaireRef = db.ref(`${this._dbRef}/${uid}/results/questionnaire/${id}`);
+      await questionnaireRef.remove();
     } catch (e) {
       console.error(`Error getting questionnaire ${id}:`, e.message);
       return null;

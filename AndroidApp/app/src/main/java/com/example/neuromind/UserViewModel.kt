@@ -51,4 +51,46 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
+    fun submitRating(uid: String, rating: Int, review: String, onResult: (Boolean) -> Unit) {
+        val ratingAndReview = Rating(rating, review)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val res = repository.submitRating(uid, ratingAndReview)
+                withContext(Dispatchers.Main) {
+                    if (res.isSuccess) {
+                        onResult(true)
+                    }
+                    else {
+                        Log.i("rating","Error submittingRating.")
+                        onResult(false)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("net", "Error occurred submitting questionnaire:", e)
+            }
+        }
+    }
+
+    fun submitSupportRequest(uid: String, message: String, onResult: (Boolean) -> Unit) {
+        val supportRequest = SupportRequest(message)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val res = repository.submitSupportRequest(uid, supportRequest)
+                withContext(Dispatchers.Main) {
+                    if (res.isSuccess) {
+                        onResult(true)
+                    }
+                    else {
+                        Log.i("rating","Error submitting support request.")
+                        onResult(false)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("net", "Error occurred submitting supportRequest:", e)
+            }
+        }
+    }
 }

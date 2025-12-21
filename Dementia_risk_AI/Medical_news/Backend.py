@@ -457,13 +457,13 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("Medical Dementia News API Starting...")
     print("=" * 60)
-    print(f"API will be available at: http://localhost:8000")
-    print(f"API docs at: http://localhost:8000/docs")
+    print(f"API will be available at: http://localhost:8001")
+    print(f"API docs at: http://localhost:8001/docs")
     print("=" * 60 + "\n")
 
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8000,
+        port=8001,
         log_level="info"
     )

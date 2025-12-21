@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { auth } from "../index";
+import { auth } from "../firebaseConfig";
 
 const UnprotectedRoute = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);

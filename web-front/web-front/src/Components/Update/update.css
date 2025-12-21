@@ -1,0 +1,51 @@
+.update-container {
+    max-width: 520px;
+    margin: 140px auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.update-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #344862;
+}
+
+.update-form input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.update-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}

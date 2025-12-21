@@ -16,7 +16,7 @@ const MedicalNews = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
 
 
-  // Fetch news on component mount
+
 
   useEffect(() => {
 

@@ -40,10 +40,10 @@ const AdminLogIn = () => {
         
         <div className="container">
             <div className="header">
-                <div className="text">Log In</div>
+                <div className="text">Admin Log In</div>
                 <div className="underline"></div>
                 <div className='signUpLink'>
-                Need an Account? <Link to="/">Sign up</Link>
+                Need an Account? <Link to="/admin/">Sign up</Link>
                 </div>
             </div>
             <div className="inputs">

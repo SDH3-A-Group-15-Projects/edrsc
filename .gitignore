@@ -8,3 +8,17 @@ functions/
 /Dementia_risk_AI/Medical_news/venv/Lib/site-packages/pydantic_core
 /Dementia_risk_AI/Medical_news/venv
 */__pycache__/
+web-front/web-front/src/adminKey.json
+backend/stripeKey.json
+backend/adminKey.json
+backend/key.json
+*.pyc
+/AI_chatbot/venv/Lib
+/AI_chatbot/venv
+AI_chatbot/__pycache__/Main.cpython-310.pyc
+AI_chatbot/__pycache__/server.cpython-310.pyc
+AI_chatbot/__pycache__/server.cpython-310.pyc
+AI_chatbot/__pycache__/Main.cpython-310.pyc
+AI_chatbot/memory_db/.lock
+AndroidApp/.gradle/
+AndroidApp/.idea/

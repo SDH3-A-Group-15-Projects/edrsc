@@ -1,5 +1,6 @@
 package com.example.neuromind
 
+import android.R.attr.rating
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -50,9 +51,9 @@ class MainActivity : ComponentActivity() {
                 LoginScreen(
                     onLoggedIn = { uid, name, new ->
                         username = name
-                        val firstName = "Ann"
+                        val firstName = "Marie"
                         val lastName = "Smith"
-                        val dateOfBirth = "1940-01-01"
+                        val dateOfBirth = "1945-05-01"
                         Log.i("auth", "We're running $new")
                         userViewModel.createUser(uid, firstName, lastName, dateOfBirth, {res -> Log.i("auth","Auth success? $res")})
                         val safe = android.net.Uri.encode(name)
@@ -112,7 +113,10 @@ class MainActivity : ComponentActivity() {
 
             composable("app_review") {
                 AppReviewScreen(
-                    onBack = { navController.popBackStack() }
+                    onBack = {navController.navigate("dashboard/${android.net.Uri.encode(username)}")},
+                    onSubmit = { rating, review ->
+                        userViewModel.submitRating(FirebaseAuth.getInstance().uid ?: "", rating, review, {Log.i("rating", "Result: $it")})
+                    }
                 )
             }
 
@@ -139,7 +143,10 @@ class MainActivity : ComponentActivity() {
 
             composable("contact_support") {
                 ContactSupportScreen(
-                    onBack = { navController.popBackStack() }
+                    onBack = { navController.popBackStack() },
+                    onSubmit = { message ->
+                        userViewModel.submitSupportRequest(FirebaseAuth.getInstance().uid ?: "", message, {Log.i("support", "Result: $it")})
+                    }
                 )
             }
 
@@ -148,7 +155,7 @@ class MainActivity : ComponentActivity() {
                     overall = lastOverallRiskScore,
                     questionnaire = lastQuestionnaireRiskScore,
                     voice = lastVoiceRiskScore,
-                    onBack = {navController.navigate("dashboard/${android.net.Uri.encode(username)}")},
+                    onBack = {navController.navigate("app_review")},
                     onContactSupport = {navController.navigate("contact_support")}
                 )
             }

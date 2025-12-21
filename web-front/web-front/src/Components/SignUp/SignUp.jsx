@@ -22,7 +22,7 @@ const SignUp = () => {
   const handleGoogleSignUp = async () => {
     try {
       const user = await createAccountWithGoogle();
-      const email = user.email;
+      const dateOfBirth = "1970-01-01";
       const displayName = user.displayName ? user.displayName.split(' ') : ['', ''];
       const firstName = displayName[0];
       const lastName = displayName[1];
@@ -37,7 +37,7 @@ const SignUp = () => {
         body: JSON.stringify({
           firstName,
           lastName,
-          email,
+          dateOfBirth,
         }),
       });
 
@@ -58,29 +58,7 @@ const SignUp = () => {
       return;
     }
     try {
-      const user = await registerNewUser(email, password);
-
-      await updateProfile(user, { displayName: `${lastName}` });
-
-      const token = await user.getIdToken();
-
-      const response = await fetch(`http://localhost:3001/api/web/users/${user.uid}/profile`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create user profile');
-      }
-
+      const user = await registerNewUser(firstName, lastName, email, password);
       navigate('/patients', { state: { lastName } });
     } catch (err) {
       console.error("Signup error:", err);
@@ -124,14 +102,17 @@ const SignUp = () => {
             <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}/>
           </div>
         </div>
-          <div className="submit" onClick={handleSignUp}>Sign Up</div>
-        </div>
-        <div>
+        <div className="button-row">
+          <div className="submit" onClick={handleSignUp}>
+            Sign Up
+          </div>
+
           <button onClick={handleGoogleSignUp} className="google-signin">
-            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google logo" className="google-logo"/>
-            Sign in with Google
+            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google Logo" className="google-logo"/>
+            Sign Up with Google
           </button>
         </div>
+      </div>
     </>
   )
 }

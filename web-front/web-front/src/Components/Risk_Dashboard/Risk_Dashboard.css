@@ -111,8 +111,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 70vh;
-    padding: 20px;
+    min-height: calc(100vh - 160px);
+    padding: 40px 20px;
 }
 
 .info-wrapper {
@@ -180,3 +180,54 @@ body {
 .patient-side-info {
     background-color: rgba(255, 255, 255, 0.85);
 }
+
+.table-container {
+    width: 80%;
+    margin: 40px auto 0;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.table-container h2 {
+    text-align: center;
+    color: #344862;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.patient-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.patient-table thead th {
+    background-color: #4a6fa5;
+    color: white;
+    padding: 14px 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.patient-table tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #344862;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.patient-table tbody td:last-child {
+    text-align: left;
+    line-height: 1.4;
+}
+.patient-table tr:hover {
+    background-color: transparent;
+}
+

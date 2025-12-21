@@ -3,7 +3,7 @@ import {Link, useLocation, useNavigate} from "react-router-dom"
 import { useEffect, useState } from 'react'
 
 import { collection, getDocs} from "firebase/firestore"
-import { auth, db } from "../../index"
+import { auth, db } from "../../firebaseConfig.js"
 import dementia_logo from '../Assets/dementia logo.png'
 
 const validatePatient = (data) => {
@@ -141,9 +141,9 @@ const Patient_selection = () => {
                                 <td><input type="checkbox" checked={patient.checked} onChange={() => handleCheckboxChange(patient.uid)} /></td>
                                 <td>{`${patient.firstName} ${patient.lastName}`}</td>
                                 <td>{patient.dateOfBirth}</td>
-                                <td>{patient.averageRisk*100}%</td>
-                                <td>{patient.questionnaireAverageRisk*100}%</td>
-                                <td>{patient.voiceAverageRisk*100}%</td>
+                                <td>{patient.averageRisk}%</td>
+                                <td>{patient.questionnaireAverageRisk}%</td>
+                                <td>{patient.voiceAverageRisk}%</td>
                             </tr>
                         ))}   
                     </tbody>

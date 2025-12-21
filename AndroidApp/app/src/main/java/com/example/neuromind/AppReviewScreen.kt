@@ -23,7 +23,8 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppReviewScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onSubmit: (Int, String) -> Unit
 ) {
     val gradient = Brush.verticalGradient(
         0.0f to clr_bckgrnd_top,
@@ -178,7 +179,7 @@ fun AppReviewScreen(
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            // TODO: Save rating + review to backend / Firebase
+                            onSubmit(rating, reviewText)
                             Toast.makeText(
                                 context,
                                 "Thank you for your feedback!",

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "673535448187-sgatn0kmp01o2ggcr6kebpj7k90nljmb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.neuromind",
+            "certificate_hash": "c34d92f470de1022d5d6afb4d506d7fc60e6da6d"
+          }
+        },
+        {
           "client_id": "673535448187-jhon5bggkdbgn4iloc1stp83nu41ga31.apps.googleusercontent.com",
           "client_type": 3
         }

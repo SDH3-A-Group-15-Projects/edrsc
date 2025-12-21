@@ -38,6 +38,7 @@ class WebUserService extends UserService {
                     const patient = await AppUserModel.getUserProfile(p);
                     if (!patient || !patient.profile) continue;
                     const patientSummary = {
+                        uid: p,
                         firstName: patient.profile.firstName,
                         lastName: patient.profile.lastName,
                         dateOfBirth: patient.profile.dateOfBirth,
@@ -95,7 +96,9 @@ class WebUserService extends UserService {
     }
 
     static async removePatient(uid, patientUID) {
-        return await WebUserModel.removePatient(uid, patientUID);
+        const removedId = await WebUserModel.removePatient(uid, patientUID);
+        this.addPatient(uid, patientUID);
+        return removedId;
     }
 
     static async generateReport(patientUID) {

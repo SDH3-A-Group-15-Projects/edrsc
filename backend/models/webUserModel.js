@@ -96,7 +96,8 @@ static async getAllUserProfiles() {
 
   static async removePatient(uid, patientUID) {
     const patientRef = db.ref(`${this._dbRef}/${uid}/patients/${patientUID}`);
-    return patientRef.remove()
+    console.log(patientRef.toString());
+    return patientRef.set(null)
     .then(() => {
       console.log("Removed patient with ID:", patientUID, "for user:", uid);
       return patientUID;

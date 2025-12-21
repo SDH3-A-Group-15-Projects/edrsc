@@ -44,7 +44,8 @@ class UserModel {
     if (oldSnapshot.exists()) {
       const newProfileData = {
         ...profileDataUpdate,
-        createdAt: oldSnapshot.val().createdAt
+        createdAt: oldSnapshot.val().createdAt,
+        email: oldSnapshot.val().email
       }
 
       await userProfileRef.update(newProfileData);

@@ -5,6 +5,8 @@ class UserController {
             const uid = req.user.uid;
             const email = req.user.email;
 
+            console.log(uid, email, firstName, lastName, dateOfBirth);
+
             if (!firstName || !lastName) {
                 return res.status(400).send("First and Last name is required.");
             }
@@ -34,14 +36,12 @@ class UserController {
 
     static async updateUserProfile(Service, req, res) {
         try {
-            const { firstName, lastName, dateOfBirth } = req.body;
-            const uid = req.user.uid;
-            const email = req.user.email;
+            const { uid, firstName, lastName, dateOfBirth } = req.body;
 
             if (!firstName || !lastName) {
                 return res.status(400).send("First and Last name is required.");
             }
-            const profileDataUpdate = await Service.updateUserProfile(uid, firstName, lastName, email, dateOfBirth);
+            const profileDataUpdate = await Service.updateUserProfile(uid, firstName, lastName, dateOfBirth);
             if (profileDataUpdate) res.status(200).json(profileDataUpdate);
             else res.status(500).send("User Profile update failed.");
         } catch (e) {

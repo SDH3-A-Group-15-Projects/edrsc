@@ -35,7 +35,8 @@ class AuthInterceptor : Interceptor {
 }
 object RetrofitClient {
     // emulator on host machine
-    private const val BASE_URL = "http://10.203.63.12:3001/"
+    // Change to IP of backend server
+    private const val BASE_URL = "http://10.203.63.216:3001/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

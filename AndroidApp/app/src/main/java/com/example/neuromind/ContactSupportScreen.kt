@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactSupportScreen(
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onSubmit: (String) -> Unit
 ) {
     val gradient = Brush.verticalGradient(
         0.0f to clr_bckgrnd_top,
@@ -85,7 +86,13 @@ fun ContactSupportScreen(
                                 .fillMaxWidth()
                                 .height(120.dp),
                             placeholder = { Text("Type your message…") },
-                            maxLines = 5
+                            maxLines = 5,
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color.Gray,
+                                disabledContainerColor = Color.Gray,
+                                errorContainerColor = Color.Gray,
+                            ),
                         )
                     }
                 }
@@ -93,7 +100,7 @@ fun ContactSupportScreen(
                 Spacer(Modifier.height(12.dp))
 
                 Button(
-                    onClick = { /* TODO: send message to support */ },
+                    onClick = { onSubmit(message) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -181,23 +188,6 @@ fun ContactSupportScreen(
                     ) {
                         Text("Email")
                     }
-                }
-
-
-                Spacer(Modifier.weight(1f))
-
-                Button(
-                    onClick = { /* TODO: app rating */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = clr_button,
-                        contentColor = clr_onPrimary
-                    )
-                ) {
-                    Text("Rate our app")
                 }
             }
         }
