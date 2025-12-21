@@ -51,9 +51,9 @@ class MainActivity : ComponentActivity() {
                 LoginScreen(
                     onLoggedIn = { uid, name, new ->
                         username = name
-                        val firstName = "Ann"
+                        val firstName = "Marie"
                         val lastName = "Smith"
-                        val dateOfBirth = "1940-01-01"
+                        val dateOfBirth = "1945-05-01"
                         Log.i("auth", "We're running $new")
                         userViewModel.createUser(uid, firstName, lastName, dateOfBirth, {res -> Log.i("auth","Auth success? $res")})
                         val safe = android.net.Uri.encode(name)

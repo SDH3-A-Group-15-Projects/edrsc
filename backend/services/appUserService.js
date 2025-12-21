@@ -107,7 +107,8 @@ class AppUserService extends UserService {
                 completionDate: new Date().toISOString()
             };
 
-            const questionnaire = await AppUserModel.getQuestionnaireById(uid, id);
+            let questionnaire = await AppUserModel.getQuestionnaireById(uid, id);
+            await AppUserModel.deleteQuestionnaireById(uid, id);
             if (!questionnaire) {
                 console.error("Questionnaire not found for voice submission.");
                 return null;
@@ -116,34 +117,25 @@ class AppUserService extends UserService {
             const voiceBlob = new Blob([voice.buffer], { type: voice.mimetype });
 
             const form = new FormData();
-            form.append("audioFile", voiceBlob, {
-                filename: voice.originalname,
-                contentType: voice.mimetype
-            });
+            form.append("audioFile", voiceBlob, voice.originalname);
             form.append("questionnaire", JSON.stringify(questionnaire));
 
-            /*
             await fetch("http://localhost:3002/voice", {
                 method: "POST",
-                headers: {
-                    ...form.getHeaders(),
-                },
                 body: form,
-                
             })
             .then(response => response.json())
             .then(data => {
                 voiceResult.calculatedRisk = data.voiceCalculatedRisk;
                 questionnaire.calculatedRisk = data.questionnaireCalculatedRisk;
             })
-            .catch(error => console.error("Error:", error));*/
-            voiceResult.calculatedRisk = 50.0; // Placeholder value
-            questionnaire.calculatedRisk = 50.0; // Placeholder value
+            .catch(error => console.error("Error:", error));
             const testResult = {
                 questionnaireRisk: questionnaire.calculatedRisk / 100.0,
                 voiceRisk: voiceResult.calculatedRisk / 100.0,
                 overallRisk: (questionnaire.calculatedRisk + voiceResult.calculatedRisk) / 200.0
             };
+            questionnaire = await AppUserModel.submitQuestionnaire(uid, questionnaire);
             voiceResult = await AppUserModel.submitVoice(uid, voiceResult);
 
             if (voiceResult) {
